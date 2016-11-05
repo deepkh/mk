@@ -11,4 +11,8 @@ LIB_CONFIGURE_FILE =
 LIB_FILE = 
 LIB_FILE_DIR =
 
+ifdef HAVE_DEF_STATIC
+	LDFLAGS += -static
+endif
+
 
