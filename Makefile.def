@@ -10,6 +10,10 @@ ifdef HAVE_DEF_DEBUG
 	CFLAGS += -g
 endif
 
+ifdef HAVE_DEF_STATIC
+	LDFLAGS += -static
+endif
+
 ifdef HAVE_DEF_SSE
 	CFLAGS += -msse -msse2 
 endif
