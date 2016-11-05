@@ -1,0 +1,41 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+default: $(LIB_CONFIGURE_FILE) $(APP) $(TARGET_LIB) $(TARGET_SOLIB) $(TARGET_DLL) $(SSL_PRI_KEY) $(SSL_PUB_KEY)
+
+$(APP): $(BIN_OBJS) $(BIN_CXX_OBJS) $(LIB_FILE)
+	$(foreach P,$(APP), $(CXX) -o $(P) $^ $(LDFLAGS);)
+
+target: EMPTY
+	$(MKDIR) $(TARGET_DIR)
+	$(foreach P,$(TARGET_LIST), $(CP) $(P) $(TARGET_DIR) ;true;)
+	$(foreach P,$(APP), $(CP) $(P)$(BINSUFFIX) $(TARGET_DIR);)
+
+$(BIN_OBJS): %.o: %.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(BIN_CXX_OBJS): %.o: %.cpp
+	$(CXX) $(CFLAGS) -o $@ -c $<
+
+$(TARGET_LIB): $(LIB_OBJS) $(LIB_CXX_OBJS) 
+	$(AR) -rcs $@ $^
+
+$(TARGET_SOLIB): $(LIB_OBJS) $(LIB_CXX_OBJS)
+	$(CXX) -shared -o $@ $^ $(LDFLAGS)
+
+$(TARGET_DLL): $(LIB_OBJS) $(LIB_CXX_OBJS)
+	$(CXX) -shared -s -Wl,--subsystem,windows,--output-def,$(subst dll,def,$@) -o $@ $^ $(LDFLAGS)
+
+$(LIB_OBJS): %.o: %.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(LIB_CXX_OBJS): %.o: %.cpp
+	$(CXX) $(CFLAGS) -o $@ -c $<
+
+clean:
+	$(foreach P,$(APP), $(RM) $(P)$(BINSUFFIX);)
+	$(foreach P,$(LIB_FILE_DIR),$(MAKE) VERSION=$(VERSION) -C $(P) clean;)
+	$(RM) $(LIB_OBJS) $(LIB_CXX_OBJS)  $(TARGET_LIB) $(TARGET_SOLIB) $(BIN_OBJS) $(BIN_CXX_OBJS) $(TARGET_DLL)

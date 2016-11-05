@@ -1,0 +1,17 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+include $(ROOT)/Makefile.def
+
+LDFLAGS = -L. -L$(RUNTIME)/lib
+LIB_CONFIGURE_FILE =
+LIB_FILE = 
+LIB_FILE_DIR =
+
+ifdef HAVE_DEF_STATIC
+	LDFLAGS += -static
+endif
+

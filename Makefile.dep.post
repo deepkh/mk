@@ -1,0 +1,28 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+ifdef HAVE_LIB_WIN32
+	LDFLAGS += -lwinmm -ladvapi32 -luuid -lole32 -lws2_32 \
+			  -Wl,--large-address-aware -Wl,--nxcompat -Wl,--dynamicbase \
+			  -lgdi32 \
+			   -lwsock32 \
+			  -lversion \
+			  -ldbghelp
+			  #-lmfplat -lmf -lmfuuid -lEvr "Mfreadwrite.lib"
+endif
+
+ifdef HAVE_LIB_PTHREAD
+	LDFLAGS += -lpthread
+endif
+
+ifdef HAVE_LIB_DL
+	LDFLAGS += -ldl
+endif
+
+ifdef HAVE_LIB_RT
+	LDFLAGS += -lrt
+endif
+

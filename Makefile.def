@@ -1,0 +1,36 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+CFLAGS = -I. -I$(RUNTIME)/include -O2 -Wall -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS
+
+ifdef HAVE_DEF_DEBUG
+	CFLAGS += -g
+endif
+
+ifdef HAVE_DEF_SSE
+	CFLAGS += -msse -msse2 
+endif
+
+ifdef HAVE_DEF_FPIC
+	CFLAGS += -fPIC
+endif
+
+ifdef HAVE_DEF_FILE_OFFSET_BITS_64
+	CFLAGS += -D_FILE_OFFSET_BITS=64
+endif
+
+ifdef HAVE_DEF_LARGEFILE64_SOURCE
+	CFLAGS += -D_LARGEFILE64_SOURCE
+endif
+
+ifdef HAVE_DEF_WINVER
+	CFLAGS += -DWINVER=$(HAVE_DEF_WINVER)
+endif
+
+ifdef HAVE_DEF_WIN32_WINNT
+	CFLAGS += -D_WIN32_WINNT=$(HAVE_DEF_WIN32_WINNT)
+endif
+
