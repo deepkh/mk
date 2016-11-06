@@ -14,6 +14,7 @@ export PATH=$PATH:$RUNTIME/bin
 export BINSUFFIX=
 export DLLSUFFIX="so"
 export DLLASUFFIX="so"
+export LDLLSUFFIX=
 
 export CP="cp -arpf"
 export RM="rm -rf"

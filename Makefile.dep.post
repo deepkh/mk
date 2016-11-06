@@ -6,7 +6,6 @@ SHELL=/bin/sh
 
 ifdef HAVE_LIB_WIN32
 	LDFLAGS += -lwinmm -ladvapi32 -luuid -lole32 -lws2_32 \
-			  -Wl,--large-address-aware -Wl,--nxcompat -Wl,--dynamicbase \
 			  -lgdi32 \
 			   -lwsock32 \
 			  -lversion \

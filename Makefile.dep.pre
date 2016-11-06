@@ -4,8 +4,6 @@
 
 SHELL=/bin/sh
 
-include $(ROOT)/Makefile.def
-
 LDFLAGS = -L. -L$(RUNTIME)/lib
 LIB_CONFIGURE_FILE =
 LIB_FILE = 
@@ -15,4 +13,6 @@ ifdef HAVE_DEF_STATIC
 	LDFLAGS += -static
 endif
 
-
+ifdef HAVE_LIB_WIN32
+	LDFLAGS += -Wl,--large-address-aware -Wl,--nxcompat -Wl,--dynamicbase 
+endif

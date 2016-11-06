@@ -13,6 +13,7 @@ export PATH=$PATH:$RUNTIME/bin
 export BINSUFFIX=
 export DLLSUFFIX="dylib"
 export DLLASUFFIX="dylib"
+export LDLLSUFFIX=
 
 export CP="cp -aRpf"
 export RM="rm -rf"

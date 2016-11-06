@@ -13,6 +13,7 @@ export PATH=$PATH:$RUNTIME/bin
 export BINSUFFIX=".exe"
 export DLLSUFFIX="dll"
 export DLLASUFFIX="dll.a"
+export LDLLSUFFIX=".dll"
 
 export CP="cp -arpf"
 export RM="rm -rf"
