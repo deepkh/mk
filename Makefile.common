@@ -6,7 +6,7 @@ SHELL=/bin/sh
 
 default: $(LIB_CONFIGURE_FILE) $(APP) $(TARGET_LIB) $(TARGET_DLL) $(SSL_PRI_KEY) $(SSL_PUB_KEY)
 
-$(APP): $(BIN_OBJS) $(BIN_CXX_OBJS) $(LIB_FILE)
+$(APP): $(BIN_OBJS) $(BIN_CXX_OBJS) $(LIB_FILE) $(RC_OBJS)
 	$(foreach P,$(APP), $(CXX) -o $(P) $^ $(LDFLAGS);)
 
 target: EMPTY
@@ -19,6 +19,15 @@ $(BIN_OBJS): %.o: %.c
 
 $(BIN_CXX_OBJS): %.o: %.cpp
 	$(CXX) $(CFLAGS) -o $@ -c $<
+
+#only for mingw-w64, or minw-w64 cross environment
+#from http://ftp.gnu.org/gnu/binutils/
+#./configure
+#make
+#cd binutils
+#make windres
+$(RC_OBJS): %.o: %.rc
+	windres $< $@
 
 $(TARGET_LIB): $(LIB_OBJS) $(LIB_CXX_OBJS) 
 	$(AR) -rcs $@ $^
@@ -39,4 +48,4 @@ $(LIB_CXX_OBJS): %.o: %.cpp
 clean:
 	$(foreach P,$(APP), $(RM) $(P)$(BINSUFFIX);)
 	$(foreach P,$(LIB_FILE_DIR),$(MAKE) VERSION=$(VERSION) -C $(P) clean;)
-	$(RM) $(LIB_OBJS) $(LIB_CXX_OBJS)  $(TARGET_LIB) $(BIN_OBJS) $(BIN_CXX_OBJS) $(TARGET_DLL)
+	$(RM) $(LIB_OBJS) $(LIB_CXX_OBJS)  $(TARGET_LIB) $(BIN_OBJS) $(BIN_CXX_OBJS) $(TARGET_DLL) $(RC_OBJS)
