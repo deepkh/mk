@@ -45,7 +45,7 @@ $(LIB_OBJS): %.o: %.c
 $(LIB_CXX_OBJS): %.o: %.cpp
 	$(CXX) $(CFLAGS) -o $@ -c $<
 
-clean:
+default_clean:
 	$(foreach P,$(APP), $(RM) $(P)$(BINSUFFIX);)
 	$(foreach P,$(LIB_FILE_DIR),$(MAKE) VERSION=$(VERSION) -C $(P) clean;)
 	$(RM) $(LIB_OBJS) $(LIB_CXX_OBJS)  $(TARGET_LIB) $(BIN_OBJS) $(BIN_CXX_OBJS) $(TARGET_DLL) $(RC_OBJS)
