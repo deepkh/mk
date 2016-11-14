@@ -32,7 +32,7 @@ $(RC_OBJS): %.o: %.rc
 $(TARGET_LIB): $(LIB_OBJS) $(LIB_CXX_OBJS) 
 	$(AR) -rcs $@ $^
 
-$(TARGET_DLL): $(LIB_OBJS) $(LIB_CXX_OBJS)
+$(TARGET_DLL): $(LIB_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
 ifneq (, $(findstring mingw, $(CROSS_COMPILE1)))
 	$(CXX) -shared -s -Wl,--subsystem,windows,--output-def,$(subst dll,def,$@) -o $@ $^ $(LDFLAGS)
 else
