@@ -10,7 +10,8 @@ ifdef HAVE_LIB_WIN32
 			   -lwsock32 \
 			  -lversion \
 			  -ldbghelp \
-			  -liphlpapi
+			  -liphlpapi \
+			  -lcrypt32	  
 			  #-lmfplat -lmf -lmfuuid -lEvr "Mfreadwrite.lib"
 endif
 
