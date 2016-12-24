@@ -11,8 +11,8 @@ ifdef HAVE_LIB_WIN32
 			  -lversion \
 			  -ldbghelp \
 			  -liphlpapi \
-			  -lcrypt32	  
-			  #-lmfplat -lmf -lmfuuid -lEvr "Mfreadwrite.lib"
+			  -lcrypt32	 \
+			  -lmfplat -lmf -lmfuuid -lEvr "$(ROOT)\Mfreadwrite.lib"
 endif
 
 ifdef HAVE_LIB_PTHREAD
