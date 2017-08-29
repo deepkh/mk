@@ -1,0 +1,37 @@
+########################################################################### 
+# 
+# Copyright (c) Delta Electronics, Inc. All Right Reserved.
+# Created by Gray Huang <gray.huang@deltaww.com> on 2017-08
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are NOT permitted without specific written permission
+# from above copyright holder.
+#
+##########################################################################
+
+
+SHELL=/bin/sh
+
+ifdef HAVE_LIB_WIN32
+	LDFLAGS += -lwinmm -ladvapi32 -luuid -lole32 -lws2_32 \
+			  -lgdi32 \
+			   -lwsock32 \
+			  -lversion \
+			  -ldbghelp \
+			  -liphlpapi \
+			  -lcrypt32	 \
+			  -lmfplat -lmf -lmfuuid -lEvr 
+endif
+
+ifdef HAVE_LIB_PTHREAD
+	LDFLAGS += -lpthread
+endif
+
+ifdef HAVE_LIB_DL
+	LDFLAGS += -ldl
+endif
+
+ifdef HAVE_LIB_RT
+	LDFLAGS += -lrt
+endif
+
