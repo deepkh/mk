@@ -1,13 +1,6 @@
-########################################################################### 
-# 
-# Copyright (c) Delta Electronics, Inc. All Right Reserved.
-# Created by Gray Huang <gray.huang@deltaww.com> on 2017-08
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are NOT permitted without specific written permission
-# from above copyright holder.
-#
-##########################################################################
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
 
 export PATH="/root/toolchain/mingw-w64-3.6.7-i686_x86_64/bin:$PATH"
 export ROOT=`pwd`

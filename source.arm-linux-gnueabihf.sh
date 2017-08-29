@@ -1,13 +1,6 @@
-########################################################################### 
-# 
-# Copyright (c) Delta Electronics, Inc. All Right Reserved.
-# Created by Gray Huang <gray.huang@deltaww.com> on 2017-08
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are NOT permitted without specific written permission
-# from above copyright holder.
-#
-##########################################################################
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
 
 # Download toolchain for ARMv7 from here
 # https://releases.linaro.org/components/toolchain/binaries/4.9-2017.01/arm-linux-gnueabihf/
