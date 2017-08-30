@@ -4,7 +4,7 @@
 
 SHELL=/bin/sh
 
-default: $(LIB_CONFIGURE_FILE) $(APP) $(TARGET_LIB) $(TARGET_DLL) $(SSL_PRI_KEY) $(SSL_PUB_KEY)
+default: $(APP) $(TARGET_LIB) $(TARGET_DLL) $(SSL_PRI_KEY) $(SSL_PUB_KEY)
 
 $(APP): $(MAIN_OBJS) $(BIN_OBJS) $(BIN_CXX_OBJS) $(RC_OBJS) $(LIB_FILE) 
 	$(foreach P,$(APP), $(CXX) -o $(P) $^ $(LDFLAGS);)

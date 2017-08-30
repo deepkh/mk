@@ -12,8 +12,8 @@ ifdef HAVE_LIB_WIN32
 			  -lversion \
 			  -ldbghelp \
 			  -liphlpapi \
-			  -lcrypt32	 \
-			  -lmfplat -lmf -lmfuuid -lEvr 
+			  -lcrypt32	# \
+			  #-lmfplat -lmf -lmfuuid -lEvr 
 endif
 
 ifdef HAVE_LIB_PTHREAD
