@@ -6,19 +6,15 @@ SHELL=/bin/sh
 
 default: $(APP) $(TARGET_LIB) $(TARGET_DLL) $(SSL_PRI_KEY) $(SSL_PUB_KEY)
 
-$(APP): $(MAIN_OBJS) $(BIN_OBJS) $(BIN_CXX_OBJS) $(RC_OBJS) $(LIB_FILE) 
-	$(foreach P,$(APP), $(CXX) -o $(P) $^ $(LDFLAGS);)
+#$(APP): $(MAIN_OBJS) $(BIN_OBJS) $(BIN_CXX_OBJS) $(RC_OBJS) $(LIB_FILE) 
+#	$(RM) $(ROOT)/liball.a 1&2>/dev/null && $(AR) crsT $(ROOT)/liball.a $(LIB_FILE)
+#	$(foreach P,$(APP), $(CXX) -o $(P) $(MAIN_OBJS) $(BIN_OBJS) $(BIN_CXX_OBJS) $(RC_OBJS) liball.a $(LDFLAGS);)
 
 target: EMPTY
 	$(MKDIR) $(TARGET_DIR)
 	$(foreach P,$(TARGET_LIST), $(CP) $(P) $(TARGET_DIR) ;true;)
 	$(foreach P,$(APP), $(CP) $(P)$(BINSUFFIX) $(TARGET_DIR);)
 
-$(BIN_OBJS): %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(BIN_CXX_OBJS): %.o: %.cpp
-	$(CXX) $(CFLAGS) -o $@ -c $<
 
 #only for mingw-w64, or minw-w64 cross environment
 #from http://ftp.gnu.org/gnu/binutils/
@@ -39,17 +35,11 @@ else
 	$(CXX) -shared -o $@ $^ $(LDFLAGS)
 endif
 
-$(LIB_OBJS): %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(LIB_CXX_OBJS): %.o: %.cpp
+%.o: %.cpp
 	$(CXX) $(CFLAGS) -o $@ -c $<
 
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
-
-%.o: %.cpp
-	$(CXX) $(CFLAGS) -o $@ -c $<
 
 default_clean:
 	$(foreach P,$(APP), $(RM) $(P)$(BINSUFFIX);)
