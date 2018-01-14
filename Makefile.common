@@ -4,18 +4,6 @@
 
 SHELL=/bin/sh
 
-default: $(APP) $(TARGET_LIB) $(TARGET_DLL) $(SSL_PRI_KEY) $(SSL_PUB_KEY)
-
-#$(APP): $(MAIN_OBJS) $(BIN_OBJS) $(BIN_CXX_OBJS) $(RC_OBJS) $(LIB_FILE) 
-#	$(RM) $(ROOT)/liball.a 1&2>/dev/null && $(AR) crsT $(ROOT)/liball.a $(LIB_FILE)
-#	$(foreach P,$(APP), $(CXX) -o $(P) $(MAIN_OBJS) $(BIN_OBJS) $(BIN_CXX_OBJS) $(RC_OBJS) liball.a $(LDFLAGS);)
-
-target: EMPTY
-	$(MKDIR) $(TARGET_DIR)
-	$(foreach P,$(TARGET_LIST), $(CP) $(P) $(TARGET_DIR) ;true;)
-	$(foreach P,$(APP), $(CP) $(P)$(BINSUFFIX) $(TARGET_DIR);)
-
-
 #only for mingw-w64, or minw-w64 cross environment
 #from http://ftp.gnu.org/gnu/binutils/
 #./configure
@@ -25,15 +13,21 @@ target: EMPTY
 $(RC_OBJS): %.o: %.rc
 	windres $< $@
 
-$(TARGET_LIB): $(LIB_OBJS) $(LIB_CXX_OBJS) 
+$(TARGET_LIB): $(LIB_C_OBJS) $(LIB_CXX_OBJS) 
 	$(AR) -rcs $@ $^
 
-$(TARGET_DLL): $(LIB_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
+$(TARGET_DLL): $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
 ifneq (, $(findstring mingw, $(CROSS_COMPILE1)))
 	$(CXX) -shared -s -Wl,--subsystem,windows,--output-def,$(subst dll,def,$@) -o $@ $^ $(LDFLAGS)
 else
 	$(CXX) -shared -o $@ $^ $(LDFLAGS)
 endif
+
+$(LIB_C_OBJS): %.o: %.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(LIB_CXX_OBJS): %.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(CFLAGS) -o $@ -c $<
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CFLAGS) -o $@ -c $<
@@ -42,8 +36,6 @@ endif
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 default_clean:
-	$(foreach P,$(APP), $(RM) $(P)$(BINSUFFIX);)
-	$(foreach P,$(LIB_FILE_DIR),$(MAKE) VERSION=$(VERSION) -C $(P) clean;)
 ifneq (,$(LIB_OBJS)$(LIB_CXX_OBJS)$(TARGET_LIB)$(BIN_OBJS)$(BIN_CXX_OBJS)$(TARGET_DLL)$(RC_OBJS))
 	$(RM) $(LIB_OBJS) $(LIB_CXX_OBJS)  $(TARGET_LIB) $(BIN_OBJS) $(BIN_CXX_OBJS) $(TARGET_DLL) $(RC_OBJS)
 endif

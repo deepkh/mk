@@ -38,8 +38,8 @@ endif
 
 LDFLAGS = -L. -L$(RUNTIME)/lib
 LIB_CONFIGURE_FILE =
-LIB_FILE = 
-LIB_FILE_DIR =
+LIB_C_OBJS = 
+LIB_CXX_OBJS = 
 
 ifdef HAVE_DEF_STATIC
 	LDFLAGS += -static
