@@ -1,0 +1,21 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+$(TARGET_HEADER): $(TARGET_HEADER_DIR)
+	$(CP) $(subst $</,,$@) $@
+
+# $(<F), $(<D) See https://www.gnu.org/software/make/manual/make.html#Automatic-Variables
+$(TARGET_HEADER_TRIGGER): $(TARGET_HEADER_DIR) $(TARGET_HEADER)
+	$(CP) $(subst $</,,$@) $@
+
+$(TARGET_HEADER_CLEAN): 
+	$(RM) $(subst _clean,,$@)
+
+$(TARGET_HEADER_TRIGGER_CLEAN): $(TARGET_HEADER_CLEAN)
+	$(RM) $(subst _clean,,$@)
+
+include $(MK_COMMON)
+

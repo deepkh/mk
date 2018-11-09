@@ -1,0 +1,47 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+$(TARGET_DLL): $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
+ifneq (, $(findstring mingw, $(PLATFORM)))
+	$(CXX) -shared -s -Wl,--subsystem,windows,--output-def,$(subst ${DLLSUFFIX},${DEFSUFFIX},$@),--out-implib,$(subst ${DLLSUFFIX},${DLLASUFFIX},$@) -o $@ $^ $(LDFLAGS_PRE) $(LDFLAGS) $(LDFLAGS_POST)
+	$(CP) $(subst ${DLLSUFFIX},${DLLASUFFIX},$@) $(RUNTIME_LIB)
+	$(CP) $@ $(subst ${DLLSUFFIX},${DEFSUFFIX},$@) $(RUNTIME_BIN)
+else
+	$(CXX) -shared -o $@ $^ $(LDFLAGS_PRE) $(LDFLAGS) $(LDFLAGS_POST)
+	$(CP) $@ $(RUNTIME_BIN)
+endif
+
+$(TARGET_DLL_CLEAN): $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN) $(RC_OBJS_CLEAN) $(TARGET_DLL_DEF_CLEAN) $(TARGET_DLL_A_CLEAN) 
+	$(RM) $(subst .${DLLSUFFIX}_clean,.${DLLSUFFIX},$@) $(RUNTIME_BIN)/$(subst .${DLLSUFFIX}_clean,.${DLLSUFFIX},$@)
+
+$(TARGET_DLL_DEF_CLEAN):
+	$(RM) $(subst .${DEFSUFFIX}_clean,.${DEFSUFFIX},$@) $(RUNTIME_LIB)/$(subst .${DEFSUFFIX}_clean,.${DEFSUFFIX},$@)
+	
+$(TARGET_DLL_A_CLEAN):
+	$(RM) $(subst .${DLLASUFFIX}_clean,.${DLLASUFFIX},$@) $(RUNTIME_LIB)/$(subst .${DLLASUFFIX}_clean,.${DLLASUFFIX},$@)
+
+#$(TARGET_DLL)_clean: $(TARGET_DLL) $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
+#ifneq (, $(findstring mingw, $(PLATFORM)))
+#	$(RM) $^ $(subst dll,def,$<) $(subst dll,dll.a,$<) \
+#		$(RUNTIME_LIB)/$< $(RUNTIME_LIB)/$(subst dll,def,$<) $(RUNTIME_LIB)/$(subst dll,dll.a,$<)
+#else
+#	$(RM) $(RUNTIME_LIB)/$< $< *.o
+#endif
+
+#dll:: $(TARGET_DLL)
+#	$(MV) $< $(RUNTIME)/bin
+#ifneq (, $(findstring mingw, $(PLATFORM)))
+#	$(MV) $(TARGET_DLL_A) $(TARGET_DLL_DEF) $(TARGET_BIN)
+#endif
+
+#dll_clean:
+#	$(RM) $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(TARGET_BIN)/$(TARGET_DLL)
+#ifneq (, $(findstring mingw, $(PLATFORM)))
+#	$(RM) $(TARGET_BIN)/$(TARGET_DLL_A) $(TARGET_BIN)/$(TARGET_DLL_DEF)
+#endif
+
+include $(MK_COMMON)
+

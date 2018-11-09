@@ -1,0 +1,125 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+# Makefile.xxx variables
+LIB_CONFIGURE_FILE=
+LIB_HEADER=
+LIB_HEADER_TRIGGER=
+LIB_C_FILE=
+LIB_C_OBJS=
+LIB_C_OBJS_CLEAN=
+LIB_CXX_FILE=
+LIB_CXX_OBJS=
+LIB_CXX_OBJS_CLEAN=
+RC_OBJS=
+RC_OBJS_CLEAN=
+
+TARGET_JOBS="${MK_JOBS}"
+TARGET_LIB=
+TARGET_LIB_CLEAN=
+TARGET_DLL=
+TARGET_DLL_CLEAN=
+TARGET_DLL_DEF=
+TARGET_DLL_DEF_CLEAN=
+TARGET_DLL_A=
+TARGET_DLL_A_CLEAN=
+TARGET_BIN=
+TARGET_BIN_DEV=
+TARGET_BIN_CLEAN=
+TARGET_DIR=
+TARGET_DIR_CLEAN=
+TARGET_HEADER_DIR=
+TARGET_HEADER_TRIGGER=
+TARGET_HEADER_TRIGGER_CLEAN=
+TARGET_HEADER=
+TARGET_HEADER_CLEAN=
+
+TARGET_PKG_URL=
+TARGET_PKG_FILE=
+TARGET_PKG_DIR=
+TARGET_PKG_SUBNAME=
+TARGET_PKG_CONFIG_H=
+TARGET_PKG_CONFIG=
+TARGET_PKG_LIB=
+TARGET_PKG_LIB_CLEAN=
+
+# GCC compiling variables
+CFLAGS = -I. -I$(RUNTIME)/include -O2 -Wall -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS 
+CXXFLAGS = -std=c++11
+
+ifdef HAVE_DEF_DEBUG
+	CFLAGS += -g
+endif
+
+ifdef HAVE_DEF_SSE
+	CFLAGS += -msse -msse2 
+endif
+
+ifdef HAVE_DEF_FPIC
+	CFLAGS += -fPIC
+endif
+
+ifdef HAVE_DEF_FILE_OFFSET_BITS_64
+	CFLAGS += -D_FILE_OFFSET_BITS=64
+endif
+
+ifdef HAVE_DEF_LARGEFILE64_SOURCE
+	CFLAGS += -D_LARGEFILE64_SOURCE
+endif
+
+ifdef HAVE_DEF_WINVER
+	CFLAGS += -DWINVER=$(HAVE_DEF_WINVER)
+endif
+
+ifdef HAVE_DEF_WIN32_WINNT
+	CFLAGS += -D_WIN32_WINNT=$(HAVE_DEF_WIN32_WINNT)
+endif
+
+
+
+# GCC linking variables
+LDFLAGS=
+LDFLAGS_PRE= -L. -L$(RUNTIME)/lib
+LDFLAGS_POST=
+
+# LDFALGS Pre
+ifdef HAVE_DEF_STATIC
+	LDFLAGS_PRE += -static
+endif
+
+ifdef HAVE_LIB_WIN32
+	LDFLAGS_PRE += -Wl,--large-address-aware -Wl,--nxcompat -Wl,--dynamicbase 
+	#-Wl,-subsystem,windows
+endif
+
+# LDFALGS Post
+ifdef HAVE_LIB_WIN32
+	LDFLAGS_POST += -lwinmm -ladvapi32 -luuid -lole32 -lws2_32 \
+			  -lgdi32 \
+			   -lwsock32 \
+			  -lversion \
+			  -ldbghelp \
+			  -liphlpapi \
+			  -lcrypt32	
+endif
+
+ifdef HAVE_LIB_PTHREAD
+	LDFLAGS_POST += -lpthread
+endif
+
+ifdef HAVE_LIB_DL
+	LDFLAGS_POST += -ldl
+endif
+
+ifdef HAVE_LIB_RT
+	LDFLAGS_POST += -lrt
+endif
+
+# Load global Makefile.reset (one project have one this file)
+ifdef HAVE_GLOBAL_MAKEFILE_RESET
+	include ${HAVE_GLOBAL_MAKEFILE_RESET}
+endif
+

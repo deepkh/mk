@@ -13,15 +13,8 @@ SHELL=/bin/sh
 $(RC_OBJS): %.o: %.rc
 	windres $< $@
 
-$(TARGET_LIB): $(LIB_C_OBJS) $(LIB_CXX_OBJS) 
-	$(AR) -rcs $@ $^
-
-$(TARGET_DLL): $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
-ifneq (, $(findstring mingw, $(CROSS_COMPILE1)))
-	$(CXX) -shared -s -Wl,--subsystem,windows,--output-def,$(subst dll,def,$@) -o $@ $^ $(LDFLAGS)
-else
-	$(CXX) -shared -o $@ $^ $(LDFLAGS)
-endif
+#%.so: %.o
+#	$(CXX) -shared -o $@ $^ $(LDFLAGS)
 
 $(LIB_C_OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -35,7 +28,16 @@ $(LIB_CXX_OBJS): %.o: %.cpp
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-default_clean:
-ifneq (,$(LIB_C_OBJS)$(LIB_CXX_OBJS)$(TARGET_LIB)$(BIN_OBJS)$(BIN_CXX_OBJS)$(TARGET_DLL)$(RC_OBJS))
-	$(RM) $(LIB_C_OBJS) $(LIB_CXX_OBJS)  $(TARGET_LIB) $(BIN_OBJS) $(BIN_CXX_OBJS) $(TARGET_DLL) $(RC_OBJS)
-endif
+$(LIB_C_OBJS_CLEAN):
+	$(RM) $(subst .o_clean,.o,$@)
+
+$(LIB_CXX_OBJS_CLEAN):
+	$(RM) $(subst .o_clean,.o,$@)
+
+$(RC_OBJS_CLEAN):
+	$(RM) $(subst .o_clean,.o,$@)
+
+#default_clean:
+#ifneq (,$(LIB_C_OBJS)$(LIB_CXX_OBJS)$(TARGET_LIB)$(BIN_OBJS)$(BIN_CXX_OBJS)$(TARGET_DLL)$(RC_OBJS))
+#	$(RM) $(LIB_C_OBJS) $(LIB_CXX_OBJS)  $(TARGET_LIB) $(BIN_OBJS) $(BIN_CXX_OBJS) $(TARGET_DLL) $(RC_OBJS)
+#endif

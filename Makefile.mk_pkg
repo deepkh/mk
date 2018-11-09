@@ -1,0 +1,34 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+$(TARGET_PKG_FILE): 
+	@echo MAKE TARGET_PKG_FILE $@
+	$(WGET) $(TARGET_PKG_URL)/$@
+
+$(TARGET_PKG_DIR): $(TARGET_PKG_FILE)
+	@echo MAKE TARGET_PKG_DIR $@
+ifeq ("tar.gz","$(TARGET_PKG_SUBNAME)")
+	$(TAR) -zxvpf $<
+else ifeq ("tar.bz2","$(TARGET_PKG_SUBNAME)")
+	$(TAR) -jxvpf $<
+else ifeq ("tar.xz","$(TARGET_PKG_SUBNAME)")
+	$(TAR) -Jxvpf $<
+endif
+
+$(TARGET_PKG_CONFIG_H): $(TARGET_PKG_DIR)
+	@echo MAKE PKGICONV_CONFIG_H $@
+	$(CD) $< && $(TARGET_PKG_CONFIG)
+
+$(TARGET_PKG_LIB): $(TARGET_PKG_CONFIG_H)
+	@echo MAKE TARGET_PKG_LIB $@
+	$(CD) $(TARGET_PKG_DIR) && $(MAKE) $(TARGET_JOBS) install
+
+$(TARGET_PKG_LIB_CLEAN): 
+	@echo MAKe TARGET_PKG_LIB_CLEAN
+	$(RM) $(TARGET_PKG_DIR) $(TARGET_PKG_LIB)
+
+include $(MK_COMMON)
+

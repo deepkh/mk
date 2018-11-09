@@ -2,18 +2,18 @@
 ### Grey Huang <deepkh@gmail.com>
 ### 2016
 
-export PATH="/root/toolchain/mingw-w64-3.6.7-i686_x86_64/bin:$PATH"
-export ROOT=`pwd`
 export MINGW_W64=i686-w64-mingw32
 export CROSS_COMPILE1=$MINGW_W64-
-export RUNTIME=$ROOT/runtime
+#export RUNTIME=$ROOT/runtime
 export PKG_CONFIG_PATH=$RUNTIME/lib/pkgconfig
-export PATH=$PATH:$RUNTIME/bin
+export PATH=$PATH:$RUNTIME/bin:$RUNTIME/lib
 
 export BINSUFFIX=".exe"
 export DLLSUFFIX="dll"
 export DLLASUFFIX="dll.a"
 export LDLLSUFFIX=".dll"
+export DEFSUFFIX="def"
+export LIBSUFFIX="a"
 
 export CP="cp -arpf"
 export RM="rm -rf"
@@ -25,6 +25,8 @@ export CC=$CROSS_COMPILE1"gcc"
 export CXX=$CROSS_COMPILE1"g++"
 export STRIP=$CROSS_COMPILE1"strip"
 export AR=$CROSS_COMPILE1"ar"
+export TAR="tar"
+export WGET="wget --no-check-certificate"
 
 export HAVE_DEF_DEBUG=1
 export HAVE_DEF_STATIC=1

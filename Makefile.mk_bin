@@ -1,0 +1,19 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+$(TARGET_BIN): $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+	$(CP) $@ $(RUNTIME_BIN)
+
+$(TARGET_BIN_DEV): $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
+	$(CXX) -o $(subst ${BINSUFFIX}_dev,${BINSUFFIX},$@) $^ $(LDFLAGS)
+	$(CP) $(subst ${BINSUFFIX}_dev,${BINSUFFIX},$@) $(RUNTIME_BIN)
+
+$(TARGET_BIN_CLEAN): $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN) $(RC_OBJS_CLEAN) 
+	$(RM) $(subst ${BINSUFFIX}_clean,${BINSUFFIX},$@) $(RUNTIME_BIN)/$(subst ${BINSUFFIX}_clean,${BINSUFFIX},$@)
+
+include $(MK_COMMON)
+

@@ -1,0 +1,15 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+$(TARGET_DIR): 
+	$(MKDIR) $@
+
+$(TARGET_DIR_CLEAN): 
+	$(RM) $(subst _clean,,$@) 
+
+include $(MK_COMMON)
+
+

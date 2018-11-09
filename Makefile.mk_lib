@@ -1,0 +1,15 @@
+### NetSync.tv Third-party library build scripts
+### Grey Huang <deepkh@gmail.com>
+### 2016
+
+SHELL=/bin/sh
+
+$(TARGET_LIB): $(LIB_C_OBJS) $(LIB_CXX_OBJS) 
+	$(AR) -rcs $@ $^
+	$(CP) $@ $(RUNTIME_LIB)
+
+$(TARGET_LIB_CLEAN): $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN)
+	$(RM) $(subst .${LIBSUFFIX}_clean,.${LIBSUFFIX},$@) $(RUNTIME_LIB)/$(subst .${LIBSUFFIX}_clean,.${LIBSUFFIX},$@)
+
+include $(MK_COMMON)
+
