@@ -78,7 +78,17 @@ ifdef HAVE_DEF_WIN32_WINNT
 	CFLAGS += -D_WIN32_WINNT=$(HAVE_DEF_WIN32_WINNT)
 endif
 
-
+ifneq (, $(findstring mingw.linux, $(PLATFORM)))
+	CFLAGS += -D_PLATFORM_MINGW_LINUX_
+else ifneq (, $(findstring mingw, $(PLATFORM)))
+	CFLAGS += -D_PLATFORM_MINGW_
+else ifneq (, $(findstring linux, $(PLATFORM)))
+	CFLAGS += -D_PLATFORM_LINUX_
+else ifneq (, $(findstring mac, $(PLATFORM)))
+	CFLAGS += -D_PLATFORM_MAC_
+else ifneq (, $(findstring arm-linux-gnueabihf, $(PLATFORM)))
+	CFLAGS += -D_PLATFORM_ARM_LINUX_GNUEABIHF_
+endif
 
 # GCC linking variables
 LDFLAGS=

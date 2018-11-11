@@ -2,7 +2,7 @@
 ### Grey Huang <deepkh@gmail.com>
 ### 2016
 
-export PATH="/root/toolchain/mingw-w64-3.6.7-i686_x86_64/bin:$PATH"
+export PATH="/opt/toolchain/mingw-w64-3.6.7-i686_x86_64/bin:$PATH"
 export MINGW_W64=i686-w64-mingw32
 export CROSS_COMPILE1=$MINGW_W64-
 export RUNTIME=$ROOT/runtime
