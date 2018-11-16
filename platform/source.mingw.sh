@@ -6,7 +6,7 @@ export MINGW_W64=i686-w64-mingw32
 export CROSS_COMPILE1=$MINGW_W64-
 #export RUNTIME=$ROOT/runtime
 export PKG_CONFIG_PATH=$RUNTIME/lib/pkgconfig
-export PATH=$PATH:$RUNTIME/bin:$RUNTIME/lib
+export PATH=$RUNTIME/bin:$PATH
 
 export BINSUFFIX=".exe"
 export DLLSUFFIX="dll"

@@ -7,7 +7,7 @@
 export RUNTIME=$ROOT/runtime
 export DYLD_LIBRARY_PATH=$RUNTIME/bin:$RUNTIME/lib
 export PKG_CONFIG_PATH=$RUNTIME/lib/pkgconfig
-export PATH=$PATH:$RUNTIME/bin
+export PATH=$RUNTIME/bin:$PATH
 
 export BINSUFFIX=
 export DLLSUFFIX="dylib"

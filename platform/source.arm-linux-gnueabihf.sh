@@ -11,7 +11,7 @@ export CROSS_COMPILE1=$MINGW_W64-
 export RUNTIME=$ROOT/runtime
 export LD_LIBRARY_PATH=$RUNTIME/bin:$RUNTIME/lib
 export PKG_CONFIG_PATH=$RUNTIME/lib/pkgconfig
-export PATH=$PATH:$RUNTIME/bin
+export PATH=$RUNTIME/bin:$PATH
 
 export BINSUFFIX=
 export DLLSUFFIX="so"
