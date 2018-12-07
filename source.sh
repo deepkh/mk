@@ -72,21 +72,12 @@ if [ -z $ROOT ]; then
 	source ${SOURCE_DEP}
 
 	# mkdir
-	RUNTIME=$ROOT/runtime
-	if [ ! -d "${RUNTIME}" ]; then
-		${MKDIR} ${RUNTIME}
-	fi
-	if [ ! -d "${RUNTIME_BIN}" ]; then
-		${MKDIR} ${RUNTIME_BIN}
-	fi
-	if [ ! -d "${RUNTIME_LIB}" ]; then
-		${MKDIR} ${RUNTIME_LIB}
-	fi
-	if [ ! -d "${RUNTIME_INCLUDE}" ]; then
-		${MKDIR} ${RUNTIME_INCLUDE}
-	fi
-	if [ ! -d "${RUNTIME}/share" ]; then
-		${MKDIR} ${RUNTIME}/share
-	fi
+	dirs=("${RUNTIME}" "${RUNTIME_BIN}" "${RUNTIME_LIB}" "${RUNTIME_INCLUDE}" "${RUNTIME}/share")
+	for dir in "${dirs[@]}"
+	do
+		if [ ! -d "${dir}" ]; then
+			${MKDIR} ${dir}
+		fi
+	done
 fi
 
