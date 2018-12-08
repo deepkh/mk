@@ -45,12 +45,96 @@ _source_file_rm() {
 	rm ${SOURCE_DEP} ${MAKEFILE_DEP} ${PLATFORM_FILE}
 }
 
+_git_show_head_print() {
+	#$1=project
+	#$2=log
+	local project=${1//"'"/""}
+	printf "%-30s %s\n" "$project" "$2"
+}
+
+_git_show_head() {
+	local logs=`git submodule foreach --recursive git log --oneline --decorate -1`
+	#local logs=`git log --oneline --decorate -1`
+	local count=0
+	local project=""
+
+	# show current project log
+	_git_show_head_print "current" "`git log --oneline --decorate -1`"
+
+	# show submodule log
+	IFS=$'\n' b_array=(${logs})
+	for i in "${b_array[@]}"
+	do
+		if [ $(((count+1)%2)) -eq 0 ]; then
+			_git_show_head_print "${project}" "${i}"
+		else
+			project=`echo ${i} | cut -d' ' -f2`
+		fi
+		count=$((count+1))
+	done
+}
+
+_git_show_log2() {
+	local show_num=5
+	if [ "$1" != "" ];then
+		cd "$1"
+		git log --oneline --decorate  -${show_num}
+		exit
+	fi
+	echo "current"
+	git log --oneline --decorate -${show_num}
+	git submodule foreach --recursive git log --oneline --decorate -${show_num}
+}
+
+_git_show_log() {
+	local logs=`git submodule foreach --recursive git log --oneline --decorate -5`
+	#local logs=`git log --oneline --decorate -1`
+	local count=0
+	local project=""
+
+	if [ ! -z "$1" ];then
+		cd "$1"
+		echo -e "\e[1;5;34m$1\e[0m"
+	else
+		echo -e "\e[1;5;34mCurrent\e[0m"
+	fi
+
+	# show current project log
+	git log --oneline --decorate -5
+	
+	if [ ! -z "$1" ];then
+		exit
+	fi
+
+	# show submodule log
+	IFS=$'\n' b_array=(${logs})
+	for i in "${b_array[@]}"
+	do
+		local prj=`echo $i | grep "Entering"`
+		if [ ! -z "$prj" ]; then
+			prj=`echo ${i} | cut -d' ' -f2`
+			prj=${prj//"'"/""}
+			echo -e "\e[1;5;34m$prj\e[0m"
+		else
+			local hash=`echo ${i} | cut -d' ' -f1`
+			local log=`echo ${i} | grep -o " .*"`
+			echo -e "\e[0;5;33m$hash\e[0m"${log}
+		fi
+	done
+}
+
+
+#git submodule foreach --recursive git log --pretty=format:"%h; %cd; %s" -1
+#echo "Entering 'libinternal/libnvenc_win32'" | cut -d' ' -f2
+
 _alias() {
 	alias cat_version="${MK}/helper.sh _cat_version"
 	alias git_check_master="${MK}/helper.sh _git_check_master"
 	alias git_hash="${MK}/helper.sh _git_hash"
 	alias git_pull_all="${MK}/helper.sh _git_pull_all"
 	alias git_status_all="${MK}/helper.sh _git_status_all"
+	alias git_show_head="${MK}/helper.sh _git_show_head"
+	alias git_show_log="${MK}/helper.sh _git_show_log"
 	alias nexync_backup="${MK}/helper.sh _nexync_backup"
 	alias source_file_rm="${MK}/helper.sh _source_file_rm"
 	alias HHHH="ls -al"
