@@ -74,37 +74,16 @@ _git_show_head() {
 	done
 }
 
-_git_show_log2() {
-	local show_num=5
-	if [ "$1" != "" ];then
-		cd "$1"
-		git log --oneline --decorate  -${show_num}
-		exit
-	fi
-	echo "current"
-	git log --oneline --decorate -${show_num}
-	git submodule foreach --recursive git log --oneline --decorate -${show_num}
-}
-
-_git_show_log() {
+_git_show_log_submodule() {
 	local logs=`git submodule foreach --recursive git log --oneline --decorate -5`
 	#local logs=`git log --oneline --decorate -1`
 	local count=0
 	local project=""
 
-	if [ ! -z "$1" ];then
-		cd "$1"
-		echo -e "\e[1;5;34m$1\e[0m"
-	else
-		echo -e "\e[1;5;34mCurrent\e[0m"
-	fi
+	echo -e "\e[1;5;34mCurrent\e[0m"
 
 	# show current project log
 	git log --oneline --decorate -5
-	
-	if [ ! -z "$1" ];then
-		exit
-	fi
 
 	# show submodule log
 	IFS=$'\n' b_array=(${logs})
@@ -123,6 +102,28 @@ _git_show_log() {
 	done
 }
 
+_git_show_log() {
+	# it's submodule mode
+	if [ -z "$1" ];then
+		_git_show_log_submodule
+		exit
+	fi
+
+	# it's show by specified args
+	for dir in "$@"
+	do
+		cd "${dir}"
+		echo -e "\e[1;5;34m${dir}\e[0m"
+
+		# show current project log
+		git log --oneline --decorate -5
+	done
+}
+
+_git_commit_push_origin_master() {
+	git commit -a
+	git push origin master
+}
 
 #git submodule foreach --recursive git log --pretty=format:"%h; %cd; %s" -1
 #echo "Entering 'libinternal/libnvenc_win32'" | cut -d' ' -f2
@@ -135,6 +136,7 @@ _alias() {
 	alias git_status_all="${MK}/helper.sh _git_status_all"
 	alias git_show_head="${MK}/helper.sh _git_show_head"
 	alias git_show_log="${MK}/helper.sh _git_show_log"
+	alias git_commit_push_origin_master="${MK}/helper.sh _git_commit_push_origin_master"
 	alias nexync_backup="${MK}/helper.sh _nexync_backup"
 	alias source_file_rm="${MK}/helper.sh _source_file_rm"
 	alias HHHH="ls -al"
