@@ -234,7 +234,6 @@ _alias() {
 	alias git_commit_push_origin_master="${MK}/helper.sh _git_commit_push_origin_master"
 	alias nexync_backup="${MK}/helper.sh _nexync_backup"
 	alias source_file_rm="${MK}/helper.sh _source_file_rm"
-	alias HHHH="ls -al"
 }
 	
 $@
