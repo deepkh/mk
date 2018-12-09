@@ -32,6 +32,10 @@ _git_pull_all() {
 	git submodule foreach --recursive git pull origin master
 }
 
+_git_pull_origin_master() {
+	git pull origin master
+}
+
 _git_status_all() {
 	git submodule foreach --recursive git status 
 	git status 
@@ -189,6 +193,7 @@ _alias() {
 	alias git_check_master="${MK}/helper.sh _git_check_master"
 	alias git_hash="${MK}/helper.sh _git_hash"
 	alias git_pull_all="${MK}/helper.sh _git_pull_all"
+	alias git_pull_origin_master="${MK}/helper.sh _git_pull_origin_master"
 	alias git_status_all="${MK}/helper.sh _git_status_all"
 	alias git_show_head="${MK}/helper.sh _git_show_head"
 	alias git_show_log="${MK}/helper.sh _git_show_log"
