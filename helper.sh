@@ -132,26 +132,42 @@ _git_commit_push_origin_master() {
 _git_show_ls_tree_log() {
 	local path="$1"
 	local prj="$2"
+	local is_root=0
 
 	# get ls-tree by parent path
 	local ls_tree_commit_id="`git ls-tree @ "${prj}" | cut -d' ' -f3 `"
 	ls_tree_commit_id=${ls_tree_commit_id:0:7}
 
+	# is_root
+	if [ "${path}" = "." ];then
+		is_root=1
+	fi
+
 	# get HEAD by this project's path
-	cd ${prj}
+	if [ $is_root -eq 0 ];then
+		cd ${prj}
+	fi
 	local head_commit_log="`git log --oneline --decorate -1`"
 	local head_commit_id=${head_commit_log:0:7}
 
-	# give red color if ls-tree commit_id not equal head_commit_id
-	if [ "${ls_tree_commit_id}" != "${head_commit_id}" ];then
-		log="[1;5;34m${ls_tree_commit_id}\e[0m | ${head_commit_log}"
-
-		printf "\e[1;34m%-30s\e[0m \e[1;31m%s\e[0m \e[1;31m%s\e[0m\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
+	if [ $is_root -eq 1 ]; then
+		# show root
+		printf "\e[1;34m%-30s\e[0m _______ %s\n" "${path}" "${head_commit_log}"
 	else
-		printf "\e[1;34m%-30s\e[0m %s %s\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
+		# show submodule
+		# give red color if ls-tree commit_id not equal head_commit_id
+		if [ "${ls_tree_commit_id}" != "${head_commit_id}" ];then
+			log="[1;5;34m${ls_tree_commit_id}\e[0m | ${head_commit_log}"
+			printf "\e[1;34m%-30s\e[0m \e[1;31m%s\e[0m \e[1;31m%s\e[0m\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
+		else
+			printf "\e[1;34m%-30s\e[0m %s %s\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
+		fi
 	fi
 	
-	cd ..
+	#if [ "${path}" != "." ];then
+	if [ $is_root -eq 0 ];then
+		cd ..
+	fi
 }
 
 _git_show_ls_tree() {
@@ -160,6 +176,7 @@ _git_show_ls_tree() {
 
 	if [ -z "$path" ];then
 		path="."
+		_git_show_ls_tree_log "." "."
 	fi
 
 	# extract .gitmodules
