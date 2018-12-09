@@ -74,7 +74,7 @@ _git_show_head() {
 	done
 }
 
-_git_show_log_submodule() {
+_git_show_log_submodules() {
 	local logs=`git submodule foreach --recursive git log --oneline --decorate -5`
 	#local logs=`git log --oneline --decorate -1`
 	local count=0
@@ -105,7 +105,7 @@ _git_show_log_submodule() {
 _git_show_log() {
 	# it's submodule mode
 	if [ -z "$1" ];then
-		_git_show_log_submodule
+		_git_show_log_submodules
 		exit
 	fi
 
@@ -125,6 +125,42 @@ _git_commit_push_origin_master() {
 	git push origin master
 }
 
+_git_ls_tree_master_submodules_show() {
+	local path="$1"
+
+	echo -e "\e[1;5;34m${path}\e[0m"
+
+}
+
+_git_ls_tree_master_submodules() {
+	local path=$1
+	local submodules=
+
+	if [ -z "$path" ];then
+		path="."
+	fi
+		
+	_git_ls_tree_master_submodules_show ${path}
+
+	if [ -f "${path}/.gitmodules" ];then
+		
+
+		submodules="`cat ${path}/.gitmodules`"
+		IFS=$'\n' b_array=(${submodules})
+		for i in "${b_array[@]}"
+		do
+			local prj=`echo $i | grep "submodule"`
+			if [ ! -z "$prj" ]; then
+				prj=`echo ${i} | cut -d' ' -f2`
+				prj=${prj//"["/""}
+				prj=${prj//"]"/""}
+				prj=${prj//"\""/""}
+				echo $prj
+			fi
+		done
+	fi
+}
+
 #git submodule foreach --recursive git log --pretty=format:"%h; %cd; %s" -1
 #echo "Entering 'libinternal/libnvenc_win32'" | cut -d' ' -f2
 
@@ -135,8 +171,9 @@ _alias() {
 	alias git_pull_all="${MK}/helper.sh _git_pull_all"
 	alias git_status_all="${MK}/helper.sh _git_status_all"
 	alias git_show_head="${MK}/helper.sh _git_show_head"
-	alias git_show_log="${MK}/helper.sh _git_show_log"
+	alias git_show_log="${MK}/helper.sh _git_show_log | less -R"
 	alias git_commit_push_origin_master="${MK}/helper.sh _git_commit_push_origin_master"
+	alias git_ls_tree_master_submodules="${MK}/helper.sh _git_ls_tree_master_submodules"
 	alias nexync_backup="${MK}/helper.sh _nexync_backup"
 	alias source_file_rm="${MK}/helper.sh _source_file_rm"
 	alias HHHH="ls -al"
