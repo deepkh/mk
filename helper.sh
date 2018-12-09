@@ -189,7 +189,7 @@ _git_show_details() {
 
 	if [ -z "$path" ];then
 		path="."
-		_git_show_ls_tree_log "." "."
+		_git_show_details_log "." "."
 	fi
 
 	# extract .gitmodules
