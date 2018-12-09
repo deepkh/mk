@@ -49,7 +49,7 @@ _git_show_head_print() {
 	#$1=project
 	#$2=log
 	local project=${1//"'"/""}
-	printf "\e[1;5;34m%-30s\e[0m %s\n" "${project}" "${2}"
+	printf "\e[1;34m%-30s\e[0m %s\n" "${project}" "${2}"
 }
 
 _git_show_head() {
@@ -80,7 +80,7 @@ _git_show_log_submodules() {
 	local count=0
 	local project=""
 
-	echo -e "\e[1;5;34mCurrent\e[0m"
+	echo -e "\e[1;34mCurrent\e[0m"
 
 	# show current project log
 	git log --oneline --decorate -5
@@ -93,11 +93,11 @@ _git_show_log_submodules() {
 		if [ ! -z "$prj" ]; then
 			prj=`echo ${i} | cut -d' ' -f2`
 			prj=${prj//"'"/""}
-			echo -e "\e[1;5;34m$prj\e[0m"
+			echo -e "\e[1;34m$prj\e[0m"
 		else
 			local hash=`echo ${i} | cut -d' ' -f1`
 			local log=`echo ${i} | grep -o " .*"`
-			echo -e "\e[0;5;33m$hash\e[0m"${log}
+			echo -e "\e[0;33m$hash\e[0m"${log}
 		fi
 	done
 }
@@ -113,7 +113,7 @@ _git_show_log() {
 	for dir in "$@"
 	do
 		cd "${dir}"
-		echo -e "\e[1;5;34m${dir}\e[0m"
+		echo -e "\e[1;34m${dir}\e[0m"
 
 		# show current project log
 		git log --oneline --decorate -5
@@ -132,21 +132,19 @@ _git_show_ls_tree_log() {
 	# get ls-tree by parent path
 	local ls_tree_commit_id="`git ls-tree @ "${prj}" | cut -d' ' -f3 `"
 	ls_tree_commit_id=${ls_tree_commit_id:0:7}
-	#printf "\e[1;5;34m%-30s\e[0m %s\n" "${path}" "${commit_id}"
 
 	# get HEAD by this project's path
 	cd ${prj}
 	local head_commit_log="`git log --oneline --decorate -1`"
 	local head_commit_id=${head_commit_log:0:7}
-	#local log="${ls_tree_commit_id} | ${head_commit_log}"
 
 	# give red color if ls-tree commit_id not equal head_commit_id
 	if [ "${ls_tree_commit_id}" != "${head_commit_id}" ];then
 		log="[1;5;34m${ls_tree_commit_id}\e[0m | ${head_commit_log}"
 
-		printf "\e[1;5;34m%-30s\e[0m \e[1;5;31m%s\e[0m \e[1;5;31m%s\e[0m\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
+		printf "\e[1;34m%-30s\e[0m \e[1;31m%s\e[0m \e[1;31m%s\e[0m\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
 	else
-		printf "\e[1;5;34m%-30s\e[0m %s %s\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
+		printf "\e[1;34m%-30s\e[0m %s %s\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
 	fi
 	
 	cd ..
