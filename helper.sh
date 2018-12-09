@@ -134,7 +134,7 @@ _git_show_details_log() {
 	local prj="$2"
 	local is_root=0
 
-	# get ls-tree by parent path
+	# ls-tree
 	local ls_tree_commit_id="`git ls-tree @ "${prj}" | cut -d' ' -f3 `"
 	ls_tree_commit_id=${ls_tree_commit_id:0:7}
 
@@ -143,28 +143,32 @@ _git_show_details_log() {
 		is_root=1
 	fi
 
-	# get HEAD by this project's path
+	# log --oneline --decorate
 	if [ $is_root -eq 0 ];then
 		cd ${prj}
 	fi
 	local head_commit_log="`git log --oneline --decorate -1`"
 	local head_commit_id=${head_commit_log:0:7}
 
+	# branch
+	local branch="`git branch | grep '* ' | cut -d' ' -f2`"
+	branch=${branch//"("/""}
+
 	if [ $is_root -eq 1 ]; then
 		# show root
-		printf "\e[1;34m%-30s\e[0m _______ %s\n" "${path}" "${head_commit_log}"
+		printf "\e[1;34m%-30s\e[0m \e[1;32m%-10s\e[0m _______ %s\n" "${path}" "${branch}" "${head_commit_log}"
 	else
 		# show submodule
 		# give red color if ls-tree commit_id not equal head_commit_id
 		if [ "${ls_tree_commit_id}" != "${head_commit_id}" ];then
 			log="[1;5;34m${ls_tree_commit_id}\e[0m | ${head_commit_log}"
-			printf "\e[1;34m%-30s\e[0m \e[1;31m%s\e[0m \e[1;31m%s\e[0m\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
+			printf "\e[1;34m%-30s\e[0m \e[1;32m%-10s\e[0m \e[1;31m%s\e[0m \e[1;31m%s\e[0m\n" "${path}" "${branch}" "${ls_tree_commit_id}" "${head_commit_log}"
 		else
-			printf "\e[1;34m%-30s\e[0m %s %s\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
+			printf "\e[1;34m%-30s\e[0m \e[1;32m%-10s\e[0m %s %s\n" "${path}" "${branch}" "${ls_tree_commit_id}" "${head_commit_log}"
 		fi
 	fi
 
-	# get git status of renamed, new file, deleted, modified
+	# status of renamed, new file, deleted, modified
 	local status_log="`git status -uno | grep -e 'renamed:' -e 'new file:' -e 'deleted:' -e 'modified:'`"
 
 	# do align
@@ -173,7 +177,7 @@ _git_show_details_log() {
 		for line in "${b_array[@]}"
 		do
 			line=${line//"	"/""}
-			printf "%-30s \e[1;35m%s\e[0m\n" "" "${line}"
+			printf "%-30s %-10s \e[1;35m%s\e[0m\n" "" "" "${line}"
 		done
 	fi
 	
@@ -250,3 +254,5 @@ _alias() {
 }
 	
 $@
+
+
