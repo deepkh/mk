@@ -185,13 +185,11 @@ _git_show_ls_tree() {
 		IFS=$'\n' b_array=(${submodules})
 		for i in "${b_array[@]}"
 		do
-			# parse .gitmodules
-			local prj=`echo $i | grep "submodule"`
+			prj=`echo $i | grep "path = "`
 			if [ ! -z "$prj" ]; then
-				prj=`echo ${i} | cut -d' ' -f2`
-				prj=${prj//"["/""}
-				prj=${prj//"]"/""}
-				prj=${prj//"\""/""}
+				prj=${i//" "/""}
+				prj=${prj//"	"/""}
+				prj=`echo ${prj} | cut -d'=' -f2`
 
 				# show ls-tree and HEAD of this submodule
 				_git_show_ls_tree_log "${path}/${prj}" "${prj}"
@@ -201,6 +199,24 @@ _git_show_ls_tree() {
 				_git_show_ls_tree "${path}/${prj}"
 				cd ..
 			fi
+
+#			these seen have program on mingw
+#			# parse .gitmodules
+#			local prj=`echo $i | grep "submodule"`
+#			if [ ! -z "$prj" ]; then
+#				prj=`echo ${i} | cut -d' ' -f2`
+#				prj=${prj//"["/""}
+#				prj=${prj//"]"/""}
+#				prj=${prj//"\""/""}
+
+#				# show ls-tree and HEAD of this submodule
+#				_git_show_ls_tree_log "${path}/${prj}" "${prj}"
+
+#				# process recursive
+#				cd ${prj}
+#				_git_show_ls_tree "${path}/${prj}"
+#				cd ..
+#			fi
 		done
 	fi
 }
