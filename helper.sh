@@ -129,7 +129,7 @@ _git_commit_push_origin_master() {
 	git push origin master
 }
 
-_git_show_ls_tree_log() {
+_git_show_details_log() {
 	local path="$1"
 	local prj="$2"
 	local is_root=0
@@ -163,6 +163,19 @@ _git_show_ls_tree_log() {
 			printf "\e[1;34m%-30s\e[0m %s %s\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
 		fi
 	fi
+
+	# get git status of renamed, new file, deleted, modified
+	local status_log="`git status -uno | grep -e 'renamed:' -e 'new file:' -e 'deleted:' -e 'modified:'`"
+
+	# do align
+	if [ ! -z "${status_log}" ];then
+		IFS=$'\n' b_array=(${status_log})
+		for line in "${b_array[@]}"
+		do
+			line=${line//"	"/""}
+			printf "%-30s \e[1;35m%s\e[0m\n" "" "${line}"
+		done
+	fi
 	
 	#if [ "${path}" != "." ];then
 	if [ $is_root -eq 0 ];then
@@ -170,7 +183,7 @@ _git_show_ls_tree_log() {
 	fi
 }
 
-_git_show_ls_tree() {
+_git_show_details() {
 	local path=$1
 	local submodules=
 
@@ -192,11 +205,11 @@ _git_show_ls_tree() {
 				prj=`echo ${prj} | cut -d'=' -f2`
 
 				# show ls-tree and HEAD of this submodule
-				_git_show_ls_tree_log "${path}/${prj}" "${prj}"
+				_git_show_details_log "${path}/${prj}" "${prj}"
 
 				# process recursive
 				cd ${prj}
-				_git_show_ls_tree "${path}/${prj}"
+				_git_show_details "${path}/${prj}"
 				cd ..
 			fi
 
@@ -230,7 +243,7 @@ _alias() {
 	alias git_status_all="${MK}/helper.sh _git_status_all"
 	alias git_show_head="${MK}/helper.sh _git_show_head"
 	alias git_show_log="${MK}/helper.sh _git_show_log"
-	alias git_show_ls_tree="${MK}/helper.sh _git_show_ls_tree"
+	alias git_show_details="${MK}/helper.sh _git_show_details"
 	alias git_commit_push_origin_master="${MK}/helper.sh _git_commit_push_origin_master"
 	alias nexync_backup="${MK}/helper.sh _nexync_backup"
 	alias source_file_rm="${MK}/helper.sh _source_file_rm"
