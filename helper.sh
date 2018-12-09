@@ -49,7 +49,7 @@ _git_show_head_print() {
 	#$1=project
 	#$2=log
 	local project=${1//"'"/""}
-	printf "%-30s %s\n" "$project" "$2"
+	printf "\e[1;5;34m%-30s\e[0m %s\n" "${project}" "${2}"
 }
 
 _git_show_head() {
@@ -125,44 +125,66 @@ _git_commit_push_origin_master() {
 	git push origin master
 }
 
-_git_ls_tree_master_submodules_show() {
+_git_show_ls_tree_log() {
 	local path="$1"
+	local prj="$2"
 
-	echo -e "\e[1;5;34m${path}\e[0m"
+	# get ls-tree by parent path
+	local ls_tree_commit_id="`git ls-tree @ "${prj}" | cut -d' ' -f3 `"
+	ls_tree_commit_id=${ls_tree_commit_id:0:7}
+	#printf "\e[1;5;34m%-30s\e[0m %s\n" "${path}" "${commit_id}"
 
+	# get HEAD by this project's path
+	cd ${prj}
+	local head_commit_log="`git log --oneline --decorate -1`"
+	local head_commit_id=${head_commit_log:0:7}
+	#local log="${ls_tree_commit_id} | ${head_commit_log}"
+
+	# give red color if ls-tree commit_id not equal head_commit_id
+	if [ "${ls_tree_commit_id}" != "${head_commit_id}" ];then
+		log="[1;5;34m${ls_tree_commit_id}\e[0m | ${head_commit_log}"
+
+		printf "\e[1;5;34m%-30s\e[0m \e[1;5;31m%s\e[0m \e[1;5;31m%s\e[0m\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
+	else
+		printf "\e[1;5;34m%-30s\e[0m %s %s\n" "${path}" "${ls_tree_commit_id}" "${head_commit_log}"
+	fi
+	
+	cd ..
 }
 
-_git_ls_tree_master_submodules() {
+_git_show_ls_tree() {
 	local path=$1
 	local submodules=
 
 	if [ -z "$path" ];then
 		path="."
 	fi
-		
-	_git_ls_tree_master_submodules_show ${path}
 
-	if [ -f "${path}/.gitmodules" ];then
-		
-
-		submodules="`cat ${path}/.gitmodules`"
+	# extract .gitmodules
+	if [ -f ".gitmodules" ];then
+		submodules="`cat .gitmodules`"
 		IFS=$'\n' b_array=(${submodules})
 		for i in "${b_array[@]}"
 		do
+			# parse .gitmodules
 			local prj=`echo $i | grep "submodule"`
 			if [ ! -z "$prj" ]; then
 				prj=`echo ${i} | cut -d' ' -f2`
 				prj=${prj//"["/""}
 				prj=${prj//"]"/""}
 				prj=${prj//"\""/""}
-				echo $prj
+
+				# show ls-tree and HEAD of this submodule
+				_git_show_ls_tree_log "${path}/${prj}" "${prj}"
+
+				# process recursive
+				cd ${prj}
+				_git_show_ls_tree "${path}/${prj}"
+				cd ..
 			fi
 		done
 	fi
 }
-
-#git submodule foreach --recursive git log --pretty=format:"%h; %cd; %s" -1
-#echo "Entering 'libinternal/libnvenc_win32'" | cut -d' ' -f2
 
 _alias() {
 	alias cat_version="${MK}/helper.sh _cat_version"
@@ -171,9 +193,9 @@ _alias() {
 	alias git_pull_all="${MK}/helper.sh _git_pull_all"
 	alias git_status_all="${MK}/helper.sh _git_status_all"
 	alias git_show_head="${MK}/helper.sh _git_show_head"
-	alias git_show_log="${MK}/helper.sh _git_show_log | less -R"
+	alias git_show_log="${MK}/helper.sh _git_show_log"
+	alias git_show_ls_tree="${MK}/helper.sh _git_show_ls_tree"
 	alias git_commit_push_origin_master="${MK}/helper.sh _git_commit_push_origin_master"
-	alias git_ls_tree_master_submodules="${MK}/helper.sh _git_ls_tree_master_submodules"
 	alias nexync_backup="${MK}/helper.sh _nexync_backup"
 	alias source_file_rm="${MK}/helper.sh _source_file_rm"
 	alias HHHH="ls -al"
