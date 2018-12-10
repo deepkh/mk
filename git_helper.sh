@@ -13,10 +13,6 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #!/bin/bash
 
-_cat_version() {
-	cat $ROOT/version.txt
-}
-
 _git_check_master() {
 	git submodule foreach --recursive git checkout master
 }
@@ -39,43 +35,6 @@ _git_pull_origin_master() {
 _git_status_all() {
 	git submodule foreach --recursive git status 
 	git status 
-}
-
-_nexync_backup() {
-	cp -arpf source* Makefile* platform mk external internal /d/backup/
-}
-
-_source_file_rm() {
-	rm ${SOURCE_DEP} ${MAKEFILE_DEP} ${PLATFORM_FILE}
-}
-
-_git_show_head_print() {
-	#$1=project
-	#$2=log
-	local project=${1//"'"/""}
-	printf "\e[1;34m%-30s\e[0m %s\n" "${project}" "${2}"
-}
-
-_git_show_head() {
-	local logs=`git submodule foreach --recursive git log --oneline --decorate -1`
-	#local logs=`git log --oneline --decorate -1`
-	local count=0
-	local project=""
-
-	# show current project log
-	_git_show_head_print "current" "`git log --oneline --decorate -1`"
-
-	# show submodule log
-	IFS=$'\n' b_array=(${logs})
-	for i in "${b_array[@]}"
-	do
-		if [ $(((count+1)%2)) -eq 0 ]; then
-			_git_show_head_print "${project}" "${i}"
-		else
-			project=`echo ${i} | cut -d' ' -f2`
-		fi
-		count=$((count+1))
-	done
 }
 
 _git_show_log_submodules() {
@@ -129,7 +88,7 @@ _git_commit_push_origin_master() {
 	git push origin master
 }
 
-_git_show_details_log() {
+_git_show_status_log() {
 	local path="$1"
 	local prj="$2"
 	local is_root=0
@@ -153,7 +112,7 @@ _git_show_details_log() {
 	# branch
 	local branch="`git branch | grep '* ' | cut -d' ' -f2`"
 	branch=${branch//"("/""}
-
+	
 	if [ $is_root -eq 1 ]; then
 		# show root
 		printf "\e[1;34m%-30s\e[0m \e[1;32m%-10s\e[0m _______ %s\n" "${path}" "${branch}" "${head_commit_log}"
@@ -187,13 +146,16 @@ _git_show_details_log() {
 	fi
 }
 
-_git_show_details() {
+_git_show_status() {
 	local path=$1
 	local submodules=
-
+	
 	if [ -z "$path" ];then
+		# print title
+		printf "\e[1;33m%-30s\e[0m \e[1;33m%-10s\e[0m \e[1;33m%-7s\e[0m \e[1;33m%s\e[0m\n" "repo" "branch" "ls-tree" "commit"
+
 		path="."
-		_git_show_details_log "." "."
+		_git_show_status_log "." "."
 	fi
 
 	# extract .gitmodules
@@ -209,11 +171,11 @@ _git_show_details() {
 				prj=`echo ${prj} | cut -d'=' -f2`
 
 				# show ls-tree and HEAD of this submodule
-				_git_show_details_log "${path}/${prj}" "${prj}"
+				_git_show_status_log "${path}/${prj}" "${prj}"
 
 				# process recursive
 				cd ${prj}
-				_git_show_details "${path}/${prj}"
+				_git_show_status "${path}/${prj}"
 				cd ..
 			fi
 
@@ -239,18 +201,14 @@ _git_show_details() {
 }
 
 _alias() {
-	alias cat_version="${MK}/helper.sh _cat_version"
-	alias git_check_master="${MK}/helper.sh _git_check_master"
-	alias git_hash="${MK}/helper.sh _git_hash"
-	alias git_pull_all="${MK}/helper.sh _git_pull_all"
-	alias git_pull_origin_master="${MK}/helper.sh _git_pull_origin_master"
-	alias git_status_all="${MK}/helper.sh _git_status_all"
-	alias git_show_head="${MK}/helper.sh _git_show_head"
-	alias git_show_log="${MK}/helper.sh _git_show_log"
-	alias git_show_details="${MK}/helper.sh _git_show_details"
-	alias git_commit_push_origin_master="${MK}/helper.sh _git_commit_push_origin_master"
-	alias nexync_backup="${MK}/helper.sh _nexync_backup"
-	alias source_file_rm="${MK}/helper.sh _source_file_rm"
+	alias git_check_master="${MK}/git_helper.sh _git_check_master"
+	alias git_hash="${MK}/git_helper.sh _git_hash"
+	alias git_pull_all="${MK}/git_helper.sh _git_pull_all"
+	alias git_pull_origin_master="${MK}/git_helper.sh _git_pull_origin_master"
+	alias git_status_all="${MK}/git_helper.sh _git_status_all"
+	alias git_show_log="${MK}/git_helper.sh _git_show_log"
+	alias git_show_status="${MK}/git_helper.sh _git_show_status"
+	alias git_commit_push_origin_master="${MK}/git_helper.sh _git_commit_push_origin_master"
 }
 	
 $@
