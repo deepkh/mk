@@ -17,12 +17,6 @@ _git_check_master() {
 	git submodule foreach --recursive git checkout master
 }
 
-_git_hash() {
-	hash=`git log --pretty=oneline | cut -d ' ' -f1 | cut -d$'\n' -f1`
-	hash6=${hash:0:4}
-	echo ${hash6}
-}
-
 _git_pull_all() {
 	git pull origin master
 	git submodule foreach --recursive git pull origin master
@@ -202,7 +196,6 @@ _git_show_status() {
 
 _alias() {
 	alias git_check_master="${MK}/git_helper.sh _git_check_master"
-	alias git_hash="${MK}/git_helper.sh _git_hash"
 	alias git_pull_all="${MK}/git_helper.sh _git_pull_all"
 	alias git_pull_origin_master="${MK}/git_helper.sh _git_pull_origin_master"
 	alias git_status_all="${MK}/git_helper.sh _git_status_all"
