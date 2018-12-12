@@ -61,8 +61,7 @@ if [ -z $ROOT ]; then
 	
 	# export runtime.linux-Linux
 	unset RUNTIME
-	export RUNTIME=$ROOT/runtime.${PLATFORM_HOST}
-	echo XXXXXXXXXXXXXXXXXXXXX${RUNTIME}
+	export RUNTIME=$ROOT/runtime
 	export RUNTIME_BIN=${RUNTIME}/bin
 	export RUNTIME_LIB=${RUNTIME}/lib
 	export RUNTIME_INCLUDE=${RUNTIME}/include
