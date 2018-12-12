@@ -13,9 +13,8 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #!/bin/bash
 
-export PLATFORM_FILE=".platform"
-export SOURCE_DEP="source.dep.sh"
-export MAKEFILE_DEP="Makefile.dep"
+export UNAME=`uname`
+export PLATFORM_FILE=".platform.${UNAME}"
 
 _get_platform_result=
 _get_platform() {
@@ -35,10 +34,6 @@ unset ROOT
 
 if [ -z $ROOT ]; then
 	export ROOT=`pwd`
-	export RUNTIME=$ROOT/runtime
-	export RUNTIME_BIN=${RUNTIME}/bin
-	export RUNTIME_LIB=${RUNTIME}/lib
-	export RUNTIME_INCLUDE=${RUNTIME}/include
 	export MK="${ROOT}/mk"
 	export MK_JOBS=-j8
 	export MK_RESET="${ROOT}/mk/Makefile.reset"
@@ -59,6 +54,19 @@ if [ -z $ROOT ]; then
 	export PLATFORM=`cat ${PLATFORM_FILE}`
 	echo "PLATFORM=${PLATFORM}"
 
+	# export source.dep.linux-Linux, Makefile.dep.linux-Linux
+	export PLATFORM_HOST="${PLATFORM}-${UNAME}"
+	export SOURCE_DEP="source.dep.${PLATFORM_HOST}"
+	export MAKEFILE_DEP="Makefile.dep.${PLATFORM_HOST}"
+	
+	# export runtime.linux-Linux
+	unset RUNTIME
+	export RUNTIME=$ROOT/runtime.${PLATFORM_HOST}
+	echo XXXXXXXXXXXXXXXXXXXXX${RUNTIME}
+	export RUNTIME_BIN=${RUNTIME}/bin
+	export RUNTIME_LIB=${RUNTIME}/lib
+	export RUNTIME_INCLUDE=${RUNTIME}/include
+
 	# load global source.${PLATFORM}.sh
 	source "${MK}/platform/source.${PLATFORM}.sh"
 
@@ -66,7 +74,7 @@ if [ -z $ROOT ]; then
 	source "${MK}/git_helper.sh" _alias
 
 	# build source.deb.sh, Makefile.dep 
-	source "${MK}/source.prebuild_dep.sh" "${SOURCE_DEP}" "${MAKEFILE_DEP}"
+	source "${MK}/source.prebuild_dep.sh" "${SOURCE_DEP}" "${MAKEFILE_DEP}" "${UNAME}"
 
 	# load source.deb.sh
 	source ${SOURCE_DEP}

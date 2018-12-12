@@ -18,7 +18,6 @@
 export PATH=$PATH:/opt/toolchain/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/bin
 export MINGW_W64=arm-linux-gnueabihf
 export CROSS_COMPILE1=$MINGW_W64-
-export RUNTIME=$ROOT/runtime
 export LD_LIBRARY_PATH=$RUNTIME/bin:$RUNTIME/lib
 export PKG_CONFIG_PATH=$RUNTIME/lib/pkgconfig
 export PATH=$RUNTIME/bin:$PATH

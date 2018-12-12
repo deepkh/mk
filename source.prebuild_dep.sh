@@ -91,7 +91,7 @@ _prebuild_source_makefile_dep() {
 
 # if not exists, then create one
 if [ ! -f ${SOURCE_DEP} ] || [ ! -f ${MAKEFILE_DEP} ]; then
-	echo "Building source.dep.sh and Makefile.dep"
+	echo "Building ${SOURCE_DEP} and ${MAKEFILE_DEP}"
 	# clear
 	echo "# May need adjustment the order manually." >  ${SOURCE_DEP}
 	echo "" > ${MAKEFILE_DEP}
