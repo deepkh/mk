@@ -69,9 +69,6 @@ if [ -z $ROOT ]; then
 	# load global source.${PLATFORM}.sh
 	source "${MK}/platform/source.${PLATFORM}.sh"
 
-	# load helper alais
-	source "${MK}/git_helper.sh" _alias
-
 	# build source.deb.sh, Makefile.dep 
 	source "${MK}/source.prebuild_dep.sh" "${SOURCE_DEP}" "${MAKEFILE_DEP}" "${UNAME}"
 
