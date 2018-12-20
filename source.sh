@@ -13,12 +13,12 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #!/bin/bash
 
-export UNAME=`uname`
-export PLATFORM_FILE=".platform.${UNAME}"
+export HOST=`uname`
+export PLATFORM_FILE=".platform.${HOST}"
 
 _get_platform_result=
 _get_platform() {
-	local platform_array=("mingw" "mingw.linux" "linux" "arm-linux-gnueabihf")
+	local platform_array=("mingw" "mingw.linux" "linux" "arm-linux-gnueabihf", "mac")
 	echo "Select Platform"
 	select yn in ${platform_array[@]} ; do
 		case $yn in
@@ -26,6 +26,7 @@ _get_platform() {
 			"${platform_array[1]}" ) _get_platform_result=${yn}; break;;
 			"${platform_array[2]}" ) _get_platform_result=${yn}; break;;
 			"${platform_array[3]}" ) _get_platform_result=${yn}; break;;
+			"${platform_array[4]}" ) _get_platform_result=${yn}; break;;
 		esac
 	done
 }
@@ -46,7 +47,7 @@ if [ -z $ROOT ]; then
 	export MK_PKG="${ROOT}/mk/Makefile.mk_pkg"
 	echo "MK=${MK}"
 
-	# get platform
+	# get PLATFORM
 	if [ ! -f "${PLATFORM_FILE}" ]; then
 		_get_platform 
 		echo "${_get_platform_result}" > "${PLATFORM_FILE}"
@@ -54,14 +55,32 @@ if [ -z $ROOT ]; then
 	export PLATFORM=`cat ${PLATFORM_FILE}`
 	echo "PLATFORM=${PLATFORM}"
 
+	# get TARGET
+	if [[ "${PLATFORM}" = "mingw" || "${PLATFORM}" = "mingw.linux" ]];then
+		export TARGET="win32"
+	elif [ "${PLATFORM}" = "linux" ];then
+		export TARGET="linux64"
+	elif [ "${PLATFORM}" = "arm-linux-gnueabihf" ];then
+		export TARGET="armv7"
+	elif [ "${PLATFORM}" = "mac" ];then
+		export TARGET="mac64"
+	fi
+
+	echo "TARGET=${TARGET}"
+
 	# export source.dep.linux-Linux, Makefile.dep.linux-Linux
-	export PLATFORM_HOST="${PLATFORM}-${UNAME}"
+	export PLATFORM_HOST="${PLATFORM}-${HOST}"
 	export SOURCE_DEP="source.dep.${PLATFORM_HOST}"
 	export MAKEFILE_DEP="Makefile.dep.${PLATFORM_HOST}"
-	
-	# export runtime.linux-Linux
-	unset RUNTIME
-	export RUNTIME=$ROOT/runtime
+
+	# export runtime.host.${HOST}
+	export RUNTIME_HOST=$ROOT/runtime.host.${HOST}
+	export RUNTIME_HOST_BIN=${RUNTIME_HOST}/bin
+	export RUNTIME_HOST_LIB=${RUNTIME_HOST}/lib
+	export RUNTIME_HOST_INCLUDE=${RUNTIME_HOST}/include
+
+	# export runtime.${TARGET}
+	export RUNTIME=$ROOT/runtime.target.${TARGET}
 	export RUNTIME_BIN=${RUNTIME}/bin
 	export RUNTIME_LIB=${RUNTIME}/lib
 	export RUNTIME_INCLUDE=${RUNTIME}/include
@@ -70,13 +89,14 @@ if [ -z $ROOT ]; then
 	source "${MK}/platform/source.${PLATFORM}.sh"
 
 	# build source.deb.sh, Makefile.dep 
-	source "${MK}/source.prebuild_dep.sh" "${SOURCE_DEP}" "${MAKEFILE_DEP}" "${UNAME}"
+	source "${MK}/source.prebuild_dep.sh" "${SOURCE_DEP}" "${MAKEFILE_DEP}" "${HOST}"
 
 	# load source.deb.sh
 	source ${SOURCE_DEP}
 
 	# mkdir
-	dirs=("${RUNTIME}" "${RUNTIME_BIN}" "${RUNTIME_LIB}" "${RUNTIME_INCLUDE}" "${RUNTIME}/share")
+	dirs=("${RUNTIME}" "${RUNTIME_BIN}" "${RUNTIME_LIB}" "${RUNTIME_INCLUDE}" "${RUNTIME}/share" \
+		"${RUNTIME_HOST}" "${RUNTIME_HOST_BIN}" "${RUNTIME_HOST_LIB}" "${RUNTIME_HOST_INCLUDE}" "${RUNTIME_HOST}/share")
 	for dir in "${dirs[@]}"
 	do
 		if [ ! -d "${dir}" ]; then
