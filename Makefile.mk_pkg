@@ -14,31 +14,43 @@
 
 SHELL=/bin/sh
 
-$(TARGET_PKG_FILE): 
-	@echo MAKE TARGET_PKG_FILE $@
-	$(WGET) $(TARGET_PKG_URL)/$@
+################ mkdir base ##########
+$(TARGET_PKG_BASE_DIR):
+	$(MKDIR) $@
 
-$(TARGET_PKG_DIR): $(TARGET_PKG_FILE)
-	@echo MAKE TARGET_PKG_DIR $@
+$(TARGET_PKG_BASE_DIR_CLEAN): $(TARGET_PKG_DIR_CLEAN)
+	$(RM) $(subst _clean,,$@)
+
+################ download file ##########
+$(TARGET_PKG_FILE):
+	$(CD) $(TARGET_PKG_BASE_DIR) && $(WGET) $(TARGET_PKG_URL)
+
+$(TARGET_PKG_FILE_CLEAN):
+	$(RM) $(subst _clean,,$@)
+
+################ extract file ##########
+$(TARGET_PKG_DIR): $(TARGET_PKG_BASE_DIR) $(TARGET_PKG_FILE)
 ifeq ("tar.gz","$(TARGET_PKG_SUBNAME)")
-	$(TAR) -zxvpf $<
+	$(CD) $(TARGET_PKG_BASE_DIR) && $(TAR) -zxvpf $(TARGET_PKG_FILE)
 else ifeq ("tar.bz2","$(TARGET_PKG_SUBNAME)")
-	$(TAR) -jxvpf $<
+	$(CD) $(TARGET_PKG_BASE_DIR) && $(TAR) -jxvpf $(TARGET_PKG_FILE)
 else ifeq ("tar.xz","$(TARGET_PKG_SUBNAME)")
-	$(TAR) -Jxvpf $<
+	$(CD) $(TARGET_PKG_BASE_DIR) && $(TAR) -Jxvpf $(TARGET_PKG_FILE)
 endif
 
-$(TARGET_PKG_CONFIG_H): $(TARGET_PKG_DIR)
-	@echo MAKE PKGICONV_CONFIG_H $@
-	$(CD) $< && $(TARGET_PKG_CONFIG)
+$(TARGET_PKG_DIR_CLEAN): $(TARGET_PKG_FILE_CLEAN)
+	$(RM) $(subst _clean,,$@)
 
+################ configure ##########
+$(TARGET_PKG_CONFIG_H): $(TARGET_PKG_DIR)
+	$(CD) $(TARGET_PKG_DIR) && $(TARGET_PKG_CONFIG) && touch $@
+	
+################ make ##########
 $(TARGET_PKG_LIB): $(TARGET_PKG_CONFIG_H)
-	@echo MAKE TARGET_PKG_LIB $@
 	$(CD) $(TARGET_PKG_DIR) && $(MAKE) $(TARGET_JOBS) install
 
-$(TARGET_PKG_LIB_CLEAN): 
-	@echo MAKe TARGET_PKG_LIB_CLEAN
-	$(RM) $(TARGET_PKG_DIR) $(TARGET_PKG_LIB)
+$(TARGET_PKG_LIB_CLEAN): $(TARGET_PKG_BASE_DIR_CLEAN)
+	$(RM) $(subst _clean,,$@)
 
 include $(MK_COMMON)
 

@@ -26,16 +26,16 @@ $(RC_OBJS): %.o: %.rc
 #%.so: %.o
 #	$(CXX) -shared -o $@ $^ $(LDFLAGS)
 
-$(LIB_C_OBJS): %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+#$(LIB_C_OBJS): %.o: %.c
+#	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(LIB_CXX_OBJS): %.o: %.cpp
+#$(LIB_CXX_OBJS): %.o: %.cpp
+#	$(CXX) $(CXXFLAGS) $(CFLAGS) -o $@ -c $<
+
+$(OBJS_DIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CFLAGS) -o $@ -c $<
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(CFLAGS) -o $@ -c $<
-
-%.o: %.c
+$(OBJS_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(LIB_C_OBJS_CLEAN):

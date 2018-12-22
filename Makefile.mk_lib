@@ -14,10 +14,12 @@
 
 SHELL=/bin/sh
 
-$(TARGET_LIB): $(LIB_C_OBJS) $(LIB_CXX_OBJS) 
+#$(TARGET_LIB): $(addprefix $(OBJS_DIR)/, $(LIB_C_OBJS)) $(addprefix $(OBJS_DIR)/, $(LIB_CXX_OBJS))
+$(TARGET_LIB): $(LIB_C_OBJS) $(LIB_CXX_OBJS)
 	$(AR) -rcs $@ $^
-	$(CP) $@ $(RUNTIME_LIB)
+	$(MV) $@ $(RUNTIME_LIB)
 
+#$(TARGET_LIB_CLEAN): $(addprefix $(OBJS_DIR)/, $(LIB_C_OBJS)) $(addprefix $(OBJS_DIR)/, $(LIB_CXX_OBJS))
 $(TARGET_LIB_CLEAN): $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN)
 	$(RM) $(subst .${LIBSUFFIX}_clean,.${LIBSUFFIX},$@) $(RUNTIME_LIB)/$(subst .${LIBSUFFIX}_clean,.${LIBSUFFIX},$@)
 

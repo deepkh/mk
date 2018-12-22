@@ -32,6 +32,13 @@ _find_file_recursive() {
 	#echo "_counter:${_counter}"
 	#echo " "
 
+	# skip runtime.xxxxx
+	local FILE_NAME=`echo "$_path" | sed "s/.*\///"`
+	if [ "${FILE_NAME:0:8}" = "runtime." ];then
+		echo "SKIP ${_path}"
+		return 0
+	fi
+
 	# clear var
 	if [ ${_counter} -eq 0 ];then
 		_find_file_recursive_results=

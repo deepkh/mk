@@ -14,7 +14,7 @@
 #!/bin/bash
 
 export HOST=`uname`
-export PLATFORM_FILE=".platform.${HOST}"
+export PLATFORM_FILE=".platform"
 
 _get_platform_result=
 _get_platform() {
@@ -47,12 +47,16 @@ if [ -z $ROOT ]; then
 	export MK_PKG="${ROOT}/mk/Makefile.mk_pkg"
 	echo "MK=${MK}"
 
-	# get PLATFORM
-	if [ ! -f "${PLATFORM_FILE}" ]; then
-		_get_platform 
-		echo "${_get_platform_result}" > "${PLATFORM_FILE}"
+	if [ "${PF}" = "" ];then
+		# get PLATFORM
+		if [ ! -f "${PLATFORM_FILE}" ]; then
+			_get_platform 
+			echo "${_get_platform_result}" > "${PLATFORM_FILE}"
+		fi
+		export PLATFORM=`cat ${PLATFORM_FILE}`
+	else
+		export PLATFORM="${PF}"
 	fi
-	export PLATFORM=`cat ${PLATFORM_FILE}`
 	echo "PLATFORM=${PLATFORM}"
 
 	# get TARGET
@@ -77,12 +81,14 @@ if [ -z $ROOT ]; then
 	export RUNTIME_HOST=$ROOT/runtime.host.${HOST}
 	export RUNTIME_HOST_BIN=${RUNTIME_HOST}/bin
 	export RUNTIME_HOST_LIB=${RUNTIME_HOST}/lib
+	export RUNTIME_HOST_OBJS=${RUNTIME_HOST}/objs
 	export RUNTIME_HOST_INCLUDE=${RUNTIME_HOST}/include
 
 	# export runtime.${TARGET}
 	export RUNTIME=$ROOT/runtime.target.${TARGET}
 	export RUNTIME_BIN=${RUNTIME}/bin
 	export RUNTIME_LIB=${RUNTIME}/lib
+	export RUNTIME_OBJS=${RUNTIME}/objs
 	export RUNTIME_INCLUDE=${RUNTIME}/include
 
 	# load global source.${PLATFORM}.sh
@@ -95,8 +101,8 @@ if [ -z $ROOT ]; then
 	source ${SOURCE_DEP}
 
 	# mkdir
-	dirs=("${RUNTIME}" "${RUNTIME_BIN}" "${RUNTIME_LIB}" "${RUNTIME_INCLUDE}" "${RUNTIME}/share" \
-		"${RUNTIME_HOST}" "${RUNTIME_HOST_BIN}" "${RUNTIME_HOST_LIB}" "${RUNTIME_HOST_INCLUDE}" "${RUNTIME_HOST}/share")
+	dirs=("${RUNTIME}" "${RUNTIME_BIN}" "${RUNTIME_LIB}" "${RUNTIME_INCLUDE}" "${RUNTIME}/share" "${RUNTIME_OBJS}" \
+		"${RUNTIME_HOST}" "${RUNTIME_HOST_BIN}" "${RUNTIME_HOST_LIB}" "${RUNTIME_HOST_INCLUDE}" "${RUNTIME_HOST_OBJS}" "${RUNTIME_HOST}/share")
 	for dir in "${dirs[@]}"
 	do
 		if [ ! -d "${dir}" ]; then
