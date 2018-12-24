@@ -102,7 +102,8 @@ if [ -z $ROOT ]; then
 
 	# mkdir
 	dirs=("${RUNTIME}" "${RUNTIME_BIN}" "${RUNTIME_LIB}" "${RUNTIME_INCLUDE}" "${RUNTIME}/share" "${RUNTIME_OBJS}" \
-		"${RUNTIME_HOST}" "${RUNTIME_HOST_BIN}" "${RUNTIME_HOST_LIB}" "${RUNTIME_HOST_INCLUDE}" "${RUNTIME_HOST_OBJS}" "${RUNTIME_HOST}/share")
+		"${RUNTIME_HOST}")
+		#"${RUNTIME_HOST}" "${RUNTIME_HOST_BIN}" "${RUNTIME_HOST_LIB}" "${RUNTIME_HOST_INCLUDE}" "${RUNTIME_HOST_OBJS}" "${RUNTIME_HOST}/share")
 	for dir in "${dirs[@]}"
 	do
 		if [ ! -d "${dir}" ]; then

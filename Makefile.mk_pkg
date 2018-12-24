@@ -31,12 +31,15 @@ $(TARGET_PKG_FILE_CLEAN):
 ################ extract file ##########
 $(TARGET_PKG_DIR): $(TARGET_PKG_BASE_DIR) $(TARGET_PKG_FILE)
 ifeq ("tar.gz","$(TARGET_PKG_SUBNAME)")
-	$(CD) $(TARGET_PKG_BASE_DIR) && $(TAR) -zxvpf $(TARGET_PKG_FILE)
+	$(CD) $(TARGET_PKG_BASE_DIR) && $(TAR) -zxvpf $(TARGET_PKG_FILE) 
 else ifeq ("tar.bz2","$(TARGET_PKG_SUBNAME)")
 	$(CD) $(TARGET_PKG_BASE_DIR) && $(TAR) -jxvpf $(TARGET_PKG_FILE)
 else ifeq ("tar.xz","$(TARGET_PKG_SUBNAME)")
 	$(CD) $(TARGET_PKG_BASE_DIR) && $(TAR) -Jxvpf $(TARGET_PKG_FILE)
+else ifeq ("zip","$(TARGET_PKG_SUBNAME)")
+	$(CD) $(TARGET_PKG_BASE_DIR) && unzip $(TARGET_PKG_FILE)
 endif
+	$(TARGET_PKG_MV_DIR_CMD)
 
 $(TARGET_PKG_DIR_CLEAN): $(TARGET_PKG_FILE_CLEAN)
 	$(RM) $(subst _clean,,$@)
@@ -45,7 +48,14 @@ $(TARGET_PKG_DIR_CLEAN): $(TARGET_PKG_FILE_CLEAN)
 $(TARGET_PKG_CONFIG_H): $(TARGET_PKG_DIR)
 	$(CD) $(TARGET_PKG_DIR) && $(TARGET_PKG_CONFIG) && touch $@
 	
-################ make ##########
+################ make bin ##########
+$(TARGET_PKG_BIN): $(TARGET_PKG_CONFIG_H)
+	$(CD) $(TARGET_PKG_DIR) && $(TARGET_PKG_BIN_MAKE_CMD)
+
+$(TARGET_PKG_BIN_CLEAN): $(TARGET_PKG_BASE_DIR_CLEAN)
+	$(RM) $(subst _clean,,$@)
+
+################ make lib ##########
 $(TARGET_PKG_LIB): $(TARGET_PKG_CONFIG_H)
 	$(CD) $(TARGET_PKG_DIR) && $(MAKE) $(TARGET_JOBS) install
 
