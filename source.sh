@@ -32,6 +32,7 @@ _get_platform() {
 }
 
 unset ROOT
+export CROSS_COMPILE_MODE="0"
 
 if [ -z $ROOT ]; then
 	export ROOT=`pwd`
@@ -46,6 +47,11 @@ if [ -z $ROOT ]; then
 	export MK_DIR="${ROOT}/mk/Makefile.mk_dir"
 	export MK_PKG="${ROOT}/mk/Makefile.mk_pkg"
 	echo "MK=${MK}"
+
+	if [ "${HOST:0:10}" = "MINGW32_NT" ];then
+		export HOST="${HOST:0:10}"
+	fi
+	echo "HOST=${HOST}"
 
 	if [ "${PF}" = "" ];then
 		# get PLATFORM
@@ -71,6 +77,17 @@ if [ -z $ROOT ]; then
 	fi
 
 	echo "TARGET=${TARGET}"
+
+	# check CROSS_COMPILE_MODE
+	if [[ "${HOST}" = "Linux"  && "${TARGET}" != "linux64" ]];then
+		export CROSS_COMPILE_MODE="1"
+	fi
+
+	if [[ "${HOST}" = "MINGW32_NT"  && "${TARGET}" != "win32" ]];then
+		export CROSS_COMPILE_MODE="1"
+	fi
+
+	echo CROSS_COMPILE_MODE=${CROSS_COMPILE_MODE}
 
 	# export source.dep.linux-Linux, Makefile.dep.linux-Linux
 	export PLATFORM_HOST="${PLATFORM}-${HOST}"

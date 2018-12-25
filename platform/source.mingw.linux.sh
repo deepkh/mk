@@ -12,11 +12,19 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-export PATH="/opt/toolchain/mingw-w64-3.6.7-i686_x86_64/bin:$PATH"
+#due to protobuf need building under mingw-posix, so the below custom toolchain has been deprecated
+#export PATH="/opt/toolchain/mingw-w64-3.6.7-i686_x86_64/bin:$PATH"
 export MINGW_W64=i686-w64-mingw32
 export CROSS_COMPILE1=$MINGW_W64-
 export PKG_CONFIG_PATH=$RUNTIME/lib/pkgconfig
 export PATH=$RUNTIME/bin:$RUNTIME/lib:$PATH
+
+export HOST_BINSUFFIX=
+export HOST_DLLSUFFIX="so"
+export HOST_DLLASUFFIX="so"
+export HOST_LDLLSUFFIX=
+export HOST_DEFSUFFIX=
+export HOST_LIBSUFFIX="a"
 
 export BINSUFFIX=".exe"
 export DLLSUFFIX="dll"

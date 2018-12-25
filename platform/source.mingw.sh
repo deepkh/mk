@@ -17,6 +17,13 @@ export CROSS_COMPILE1=$MINGW_W64-
 export PKG_CONFIG_PATH=$RUNTIME/lib/pkgconfig
 export PATH=$RUNTIME/bin:$PATH
 
+export HOST_BINSUFFIX=".exe"
+export HOST_DLLSUFFIX="dll"
+export HOST_DLLASUFFIX="dll.a"
+export HOST_LDLLSUFFIX=".dll"
+export HOST_DEFSUFFIX="def"
+export HOST_LIBSUFFIX="a"
+
 export BINSUFFIX=".exe"
 export DLLSUFFIX="dll"
 export DLLASUFFIX="dll.a"

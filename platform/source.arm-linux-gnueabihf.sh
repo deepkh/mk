@@ -22,6 +22,13 @@ export LD_LIBRARY_PATH=$RUNTIME/bin:$RUNTIME/lib
 export PKG_CONFIG_PATH=$RUNTIME/lib/pkgconfig
 export PATH=$RUNTIME/bin:$PATH
 
+export HOST_BINSUFFIX=
+export HOST_DLLSUFFIX="so"
+export HOST_DLLASUFFIX="so"
+export HOST_LDLLSUFFIX=
+export HOST_DEFSUFFIX=
+export HOST_LIBSUFFIX="a"
+
 export BINSUFFIX=
 export DLLSUFFIX="so"
 export DLLASUFFIX="so"
