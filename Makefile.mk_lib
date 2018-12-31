@@ -14,14 +14,26 @@
 
 SHELL=/bin/sh
 
-#$(TARGET_LIB): $(addprefix $(OBJS_DIR)/, $(LIB_C_OBJS)) $(addprefix $(OBJS_DIR)/, $(LIB_CXX_OBJS))
-$(TARGET_LIB): $(LIB_C_OBJS) $(LIB_CXX_OBJS)
-	$(AR) -rcs $@ $^
-	$(MV) $@ $(RUNTIME_LIB)
+################ make dir #################
+$(TARGET_LIB_DIRS):
+	$(MKDIR) $@
 
-#$(TARGET_LIB_CLEAN): $(addprefix $(OBJS_DIR)/, $(LIB_C_OBJS)) $(addprefix $(OBJS_DIR)/, $(LIB_CXX_OBJS))
-$(TARGET_LIB_CLEAN): $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN)
-	$(RM) $(subst .${LIBSUFFIX}_clean,.${LIBSUFFIX},$@) $(RUNTIME_LIB)/$(subst .${LIBSUFFIX}_clean,.${LIBSUFFIX},$@)
+$(TARGET_LIB_DIRS_CLEAN):
+	$(RM) $(subst _clean,,$@) 
 
+################ copy header #################
+$(TARGET_LIB_HEADERS): $(TARGET_LIB_HEADER_BASE_DIR)
+	$(CP) $(subst $</,,$@) $@
+
+$(TARGET_LIB_HEADERS_CLEAN):
+	$(RM) $(subst _clean,,$@) 
+
+################ mk lib #################
+$(TARGET_LIB): $(TARGET_LIB_DIRS) $(TARGET_LIB_HEADERS) $(LIB_C_OBJS) $(LIB_CXX_OBJS)
+	$(AR) -rcs $@ $(filter %.o,$^)
+
+$(TARGET_LIB_CLEAN): $(TARGET_LIB_DIRS_CLEAN) $(TARGET_LIB_HEADERS_CLEAN) $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN)
+	$(RM) $(subst _clean,,$@) 
+	
 include $(MK_COMMON)
 

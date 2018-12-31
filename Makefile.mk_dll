@@ -14,44 +14,40 @@
 
 SHELL=/bin/sh
 
-$(TARGET_DLL): $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
+
+################ make dir #################
+$(TARGET_DLL_DIRS):
+	$(MKDIR) $@
+
+$(TARGET_DLL_DIRS_CLEAN):
+	$(RM) $(subst _clean,,$@) 
+
+################ copy header #################
+$(TARGET_DLL_HEADERS): $(TARGET_DLL_HEADER_BASE_DIR)
+	$(CP) $(subst $</,,$@) $@
+
+$(TARGET_DLL_HEADERS_CLEAN):
+	$(RM) $(subst _clean,,$@) 
+
+################ mk dll #################
+# mingw:
+#		runtime.target/bin/*.dll 
+#		runtime.target/lib/*.dll.a
+#		runtime.target/lib/*.def
+# linux:
+#		runtime.target/lib/*.so
+$(TARGET_DLL): $(TARGET_DLL_DIRS) $(TARGET_DLL_HEADERS) $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
 ifneq (, $(findstring mingw, $(PLATFORM)))
-	$(CXX) -shared -s -Wl,--subsystem,windows,--output-def,$(subst ${DLLSUFFIX},${DEFSUFFIX},$@),--out-implib,$(subst ${DLLSUFFIX},${DLLASUFFIX},$@) -o $@ $^ $(LDFLAGS_PRE) $(LDFLAGS) $(LDFLAGS_POST)
+	$(CXX) -shared -s -Wl,--subsystem,windows,--output-def,$(subst ${DLLSUFFIX},${DEFSUFFIX},$@),--out-implib,$(subst ${DLLSUFFIX},${DLLASUFFIX},$@) -o $@ $(filter %.o,$^) $(LDFLAGS_PRE) $(LDFLAGS) $(LDFLAGS_POST)
 	$(MV) $(subst ${DLLSUFFIX},${DLLASUFFIX},$@) $(RUNTIME_LIB)
-	$(MV) $@ $(subst ${DLLSUFFIX},${DEFSUFFIX},$@) $(RUNTIME_BIN)
+	$(MV) $(subst ${DLLSUFFIX},${DEFSUFFIX},$@) $(RUNTIME_LIB)
 else
-	$(CXX) -shared -o $@ $^ $(LDFLAGS_PRE) $(LDFLAGS) $(LDFLAGS_POST)
-	$(MV) $@ $(RUNTIME_BIN)
+	$(CXX) -shared -o $@ $(filter %.o,$^) $(LDFLAGS_PRE) $(LDFLAGS) $(LDFLAGS_POST)
+#	$(MV) $@ $(RUNTIME_BIN)
 endif
 
-$(TARGET_DLL_CLEAN): $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN) $(RC_OBJS_CLEAN) $(TARGET_DLL_DEF_CLEAN) $(TARGET_DLL_A_CLEAN) 
-	$(RM) $(subst .${DLLSUFFIX}_clean,.${DLLSUFFIX},$@) $(RUNTIME_BIN)/$(subst .${DLLSUFFIX}_clean,.${DLLSUFFIX},$@)
-
-$(TARGET_DLL_DEF_CLEAN):
-	$(RM) $(subst .${DEFSUFFIX}_clean,.${DEFSUFFIX},$@) $(RUNTIME_LIB)/$(subst .${DEFSUFFIX}_clean,.${DEFSUFFIX},$@)
-	
-$(TARGET_DLL_A_CLEAN):
-	$(RM) $(subst .${DLLASUFFIX}_clean,.${DLLASUFFIX},$@) $(RUNTIME_LIB)/$(subst .${DLLASUFFIX}_clean,.${DLLASUFFIX},$@)
-
-#$(TARGET_DLL)_clean: $(TARGET_DLL) $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
-#ifneq (, $(findstring mingw, $(PLATFORM)))
-#	$(RM) $^ $(subst dll,def,$<) $(subst dll,dll.a,$<) \
-#		$(RUNTIME_LIB)/$< $(RUNTIME_LIB)/$(subst dll,def,$<) $(RUNTIME_LIB)/$(subst dll,dll.a,$<)
-#else
-#	$(RM) $(RUNTIME_LIB)/$< $< *.o
-#endif
-
-#dll:: $(TARGET_DLL)
-#	$(MV) $< $(RUNTIME)/bin
-#ifneq (, $(findstring mingw, $(PLATFORM)))
-#	$(MV) $(TARGET_DLL_A) $(TARGET_DLL_DEF) $(TARGET_BIN)
-#endif
-
-#dll_clean:
-#	$(RM) $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(TARGET_BIN)/$(TARGET_DLL)
-#ifneq (, $(findstring mingw, $(PLATFORM)))
-#	$(RM) $(TARGET_BIN)/$(TARGET_DLL_A) $(TARGET_BIN)/$(TARGET_DLL_DEF)
-#endif
+$(TARGET_DLL_CLEAN): $(TARGET_DLL_DIRS_CLEAN) $(TARGET_DLL_HEADERS_CLEAN) $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN)
+	$(RM) $(subst _clean,,$@)
 
 include $(MK_COMMON)
 

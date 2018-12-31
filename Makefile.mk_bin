@@ -14,17 +14,19 @@
 
 SHELL=/bin/sh
 
-#$(TARGET_BIN): $(addprefix $(OBJS_DIR)/, $(LIB_C_OBJS)) $(addprefix $(OBJS_DIR)/, $(LIB_CXX_OBJS)) $(addprefix $(OBJS_DIR)/, $(RC_OBJS))
-$(TARGET_BIN): $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
-	$(CXX) -o $@ $^ $(LDFLAGS)
-	$(MV) $@ $(RUNTIME_BIN)
+################ make dir #################
+$(TARGET_BIN_DIRS):
+	$(MKDIR) $@
 
-$(TARGET_BIN_DEV): $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
-	$(CXX) -o $(subst ${BINSUFFIX}_dev,${BINSUFFIX},$@) $^ $(LDFLAGS)
-	$(MV) $(subst ${BINSUFFIX}_dev,${BINSUFFIX},$@) $(RUNTIME_BIN)
+$(TARGET_BIN_DIRS_CLEAN):
+	$(RM) $(subst _clean,,$@) 
 
-$(TARGET_BIN_CLEAN): $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN) $(RC_OBJS_CLEAN)
-	$(RM) $(subst ${BINSUFFIX}_clean,${BINSUFFIX},$@) $(RUNTIME_BIN)/$(subst ${BINSUFFIX}_clean,${BINSUFFIX},$@)
+################ mk lib #################
+$(TARGET_BIN): $(TARGET_BIN_DIRS) $(TARGET_BIN_DIRS) $(LIB_C_OBJS) $(LIB_CXX_OBJS)
+	$(CXX) -o $@ $(filter %.o,$^) $(LDFLAGS)
+
+$(TARGET_BIN_CLEAN): $(TARGET_BIN_DIRS_CLEAN) $(TARGET_BIN_HEADERS_CLEAN) $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN)
+	$(RM) $(subst _clean,,$@) 
 
 include $(MK_COMMON)
 

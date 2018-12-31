@@ -105,6 +105,11 @@ if [ -z $ROOT ]; then
 	export RUNTIME=$ROOT/runtime.target.${TARGET}
 	export RUNTIME_BIN=${RUNTIME}/bin
 	export RUNTIME_LIB=${RUNTIME}/lib
+	if [[ "${PLATFORM}" = "mingw" || "${PLATFORM}" = "mingw.linux" ]];then
+		export RUNTIME_DLL=${RUNTIME}/bin
+	else
+		export RUNTIME_DLL=${RUNTIME}/lib
+	fi
 	export RUNTIME_OBJS=${RUNTIME}/objs
 	export RUNTIME_INCLUDE=${RUNTIME}/include
 
