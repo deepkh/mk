@@ -23,7 +23,7 @@ $(TARGET_PKG_BASE_DIR_CLEAN): $(TARGET_PKG_DIR_CLEAN)
 
 ################ download file ##########
 $(TARGET_PKG_FILE):
-ifeq ("://","$(TARGET_PKG_URL)")
+ifneq (, $(findstring ://, $(TARGET_PKG_URL)))
 	$(CD) $(TARGET_PKG_BASE_DIR) && $(WGET) $(TARGET_PKG_URL)
 else
 	$(CD) $(TARGET_PKG_BASE_DIR) && $(CP) $(TARGET_PKG_URL) .
