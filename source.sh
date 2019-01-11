@@ -102,7 +102,7 @@ if [ -z $ROOT ]; then
 	export RUNTIME_HOST_INCLUDE=${RUNTIME_HOST}/include
 
 	# export runtime.${TARGET}
-	export RUNTIME=$ROOT/runtime.target.${TARGET}
+	export RUNTIME=$ROOT/runtime.${TARGET}
 	export RUNTIME_BIN=${RUNTIME}/bin
 	export RUNTIME_LIB=${RUNTIME}/lib
 	if [[ "${PLATFORM}" = "mingw" || "${PLATFORM}" = "mingw.linux" ]];then
