@@ -141,6 +141,7 @@ endif
 
 ifdef HAVE_LIB_WIN32
 	#LDFLAGS_PRE += -Wl,--large-address-aware -Wl,--nxcompat -Wl,--dynamicbase 
+	#mingw-w64_x86-64 seems not support "--large-address-aware"
 	LDFLAGS_PRE += -Wl,--nxcompat -Wl,--dynamicbase 
 	#-Wl,-subsystem,windows
 endif
