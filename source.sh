@@ -46,6 +46,7 @@ if [ -z $ROOT ]; then
 	export MK_HEADER="${ROOT}/mk/Makefile.mk_header"
 	export MK_DIR="${ROOT}/mk/Makefile.mk_dir"
 	export MK_PKG="${ROOT}/mk/Makefile.mk_pkg"
+	export MK_SCRIPT="${ROOT}/mk/Makefile.mk_script"
 	echo "MK=${MK}"
 
 	if [ "${HOST:0:10}" = "MINGW32_NT" ];then

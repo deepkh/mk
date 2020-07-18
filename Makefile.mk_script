@@ -14,19 +14,25 @@
 
 SHELL=/bin/sh
 
-################ make dir #################
-$(TARGET_BIN_DIRS):
+################ mkdir base ##########
+$(TARGET_SCRIPT_BASE_DIR):
 	$(MKDIR) $@
 
-$(TARGET_BIN_DIRS_CLEAN):
-	$(RM) $(subst _clean,,$@) 
+$(TARGET_SCRIPT_BASE_DIR_CLEAN): $(TARGET_SCRIPT_DIR_CLEAN)
+	$(RM) $(subst _clean,,$@)
 
-################ mk lib #################
-$(TARGET_BIN): $(TARGET_BIN_DIRS) $(TARGET_BIN_DIRS) $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(RC_OBJS)
-	$(CXX) -o $@ $(filter %.o,$^) $(LDFLAGS)
+################ copy script file ##########
+$(TARGET_SCRIPT_FILE): 
+	$(CP) $(TARGET_SCRIPT_DIR)/$(subst $(TARGET_SCRIPT_BASE_DIR)/,,$@) $@
 
-$(TARGET_BIN_CLEAN): $(TARGET_BIN_DIRS_CLEAN) $(TARGET_BIN_HEADERS_CLEAN) $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN) $(RC_OBJS_CLEAN)
-	$(RM) $(subst _clean,,$@) 
+$(TARGET_SCRIPT_FILE_CLEAN):
+	$(RM) $(subst _clean,,$@)
+
+################ execute script ##########
+$(TARGET_SCRIPT_RESULT): $(TARGET_SCRIPT_BASE_DIR) $(TARGET_SCRIPT_FILE)
+	$(TARGET_SCRIPT_CMD)
+
+$(TARGET_SCRIPT_RESULT_CLEAN): $(TARGET_SCRIPT_BASE_DIR_CLEAN)
 
 include $(MK_COMMON)
- 
+

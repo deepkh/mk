@@ -20,8 +20,8 @@ SHELL=/bin/sh
 #make
 #cd binutils
 #make windres
-$(RC_OBJS): %.o: %.rc
-	windres $< $@
+#$(RC_OBJS): %.o: %.rc
+#	$(WINDRES) $< $@
 
 #%.so: %.o
 #	$(CXX) -shared -o $@ $^ $(LDFLAGS)
@@ -37,6 +37,9 @@ $(OBJS_DIR)/%.o: %.cpp
 
 $(OBJS_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJS_DIR)/%.o: %.rc
+	$(WINDRES) $< $@
 
 $(LIB_C_OBJS_CLEAN):
 	$(RM) $(subst .o_clean,.o,$@)

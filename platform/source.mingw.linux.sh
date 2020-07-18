@@ -44,6 +44,7 @@ export CC=$CROSS_COMPILE1"gcc"
 export CXX=$CROSS_COMPILE1"g++"
 export STRIP=$CROSS_COMPILE1"strip"
 export AR=$CROSS_COMPILE1"ar"
+export WINDRES=$CROSS_COMPILE1"windres"
 export TAR="tar"
 export WGET="wget --no-check-certificate"
 
