@@ -96,11 +96,11 @@ if [ -z $ROOT ]; then
 	export MAKEFILE_DEP="Makefile.dep.${PLATFORM_HOST}"
 
 	# export runtime.host.${HOST}
-	export RUNTIME_HOST=$ROOT/runtime.host.${HOST}
-	export RUNTIME_HOST_BIN=${RUNTIME_HOST}/bin
-	export RUNTIME_HOST_LIB=${RUNTIME_HOST}/lib
-	export RUNTIME_HOST_OBJS=${RUNTIME_HOST}/objs
-	export RUNTIME_HOST_INCLUDE=${RUNTIME_HOST}/include
+	#export RUNTIME_HOST=$ROOT/runtime.host.${HOST}
+	#export RUNTIME_HOST_BIN=${RUNTIME_HOST}/bin
+	#export RUNTIME_HOST_LIB=${RUNTIME_HOST}/lib
+	#export RUNTIME_HOST_OBJS=${RUNTIME_HOST}/objs
+	#export RUNTIME_HOST_INCLUDE=${RUNTIME_HOST}/include
 
 	# export runtime.${TARGET}
 	export RUNTIME=$ROOT/runtime.${TARGET}
@@ -124,7 +124,7 @@ if [ -z $ROOT ]; then
 	source ${SOURCE_DEP}
 
 	# mkdir
-	dirs=("${RUNTIME}" "${RUNTIME_BIN}" "${RUNTIME_LIB}" "${RUNTIME_INCLUDE}" "${RUNTIME}/share")
+	dirs=("${RUNTIME}" "${RUNTIME_BIN}" "${RUNTIME_LIB}" "${RUNTIME_INCLUDE}" "${RUNTIME}/share" "${RUNTIME_OBJS}")
 		#"${RUNTIME_OBJS}" \
 		#"${RUNTIME_HOST}")
 		#"${RUNTIME_HOST}" "${RUNTIME_HOST_BIN}" "${RUNTIME_HOST_LIB}" "${RUNTIME_HOST_INCLUDE}" "${RUNTIME_HOST_OBJS}" "${RUNTIME_HOST}/share")
