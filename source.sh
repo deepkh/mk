@@ -68,7 +68,7 @@ if [ -z $ROOT ]; then
 
 	# get TARGET
 	if [[ "${PLATFORM}" = "mingw" || "${PLATFORM}" = "mingw.linux" ]];then
-		export TARGET="win32"
+		export TARGET="win64"
 	elif [ "${PLATFORM}" = "linux" ];then
 		export TARGET="linux64"
 	elif [ "${PLATFORM}" = "arm-linux-gnueabihf" ];then
@@ -84,7 +84,7 @@ if [ -z $ROOT ]; then
 		export CROSS_COMPILE_MODE="1"
 	fi
 
-	if [[ "${HOST}" = "MINGW32_NT"  && "${TARGET}" != "win32" ]];then
+	if [[ "${HOST}" = "MINGW32_NT"  && "${TARGET}" != "win64" ]];then
 		export CROSS_COMPILE_MODE="1"
 	fi
 
