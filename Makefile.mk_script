@@ -24,6 +24,7 @@ $(TARGET_SCRIPT_BASE_DIR_CLEAN): $(TARGET_SCRIPT_DIR_CLEAN)
 ################ copy script file ##########
 $(TARGET_SCRIPT_FILE): 
 	$(CP) $(TARGET_SCRIPT_DIR)/$(subst $(TARGET_SCRIPT_BASE_DIR)/,,$@) $@
+	chmod +x $@
 
 $(TARGET_SCRIPT_FILE_CLEAN):
 	$(RM) $(subst _clean,,$@)
