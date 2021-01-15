@@ -14,19 +14,21 @@
 
 SHELL=/bin/sh
 
-################ make dir #################
-$(TARGET_BIN_DIRS):
-	$(MKDIR) $@
+################ protoc gen cpp #################
+cc/%.pb.cc: %.proto
+	@echo ===222cpp_out $(subst /cc,,$<)
+	$(MKDIR) cc > /dev/null 2> /dev/null
+	protoc -I=. --cpp_out=cc $(subst /cc,,$<)
 
-$(TARGET_BIN_DIRS_CLEAN):
-	$(RM) $(subst _clean,,$@) 
+################ protoc gen go #################
+%.pb.go: %.proto
+	@echo ===222go_out
+	protoc -I=. --go_out=. $<
 
-################ mk lib #################
-$(TARGET_BIN): $(TARGET_BIN_DIRS) $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(LIB_CC_OBJS) $(RC_OBJS)
-	$(CXX) -o $@ $(filter %.o,$^) $(LDFLAGS)
+################ clean .pb.cc, .pb.h #################
+%.pb.cc_clean:
+	$(RM) $(subst .pb.cc_clean,.pb.cc,$@) $(subst .pb.cc_clean,.pb.h,$@)
 
-$(TARGET_BIN_CLEAN): $(TARGET_BIN_DIRS_CLEAN) $(TARGET_BIN_HEADERS_CLEAN) $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN) $(LIB_CC_OBJS_CLEAN) $(RC_OBJS_CLEAN)
-	$(RM) $(subst _clean,,$@) 
-
-include $(MK_COMMON)
- 
+################ clean .pb.go #################
+%.pb.go_clean:
+	$(RM) $(subst .pb.go_clean,.pb.go,$@)

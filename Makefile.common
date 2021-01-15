@@ -35,6 +35,9 @@ SHELL=/bin/sh
 $(OBJS_DIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CFLAGS) -o $@ -c $<
 
+$(OBJS_DIR)/%.o: %.cc
+	$(CXX) $(CXXFLAGS) $(CFLAGS) -o $@ -c $<
+
 $(OBJS_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
@@ -45,6 +48,9 @@ $(LIB_C_OBJS_CLEAN):
 	$(RM) $(subst .o_clean,.o,$@)
 
 $(LIB_CXX_OBJS_CLEAN):
+	$(RM) $(subst .o_clean,.o,$@)
+
+$(LIB_CC_OBJS_CLEAN):
 	$(RM) $(subst .o_clean,.o,$@)
 
 $(RC_OBJS_CLEAN):

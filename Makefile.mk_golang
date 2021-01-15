@@ -14,19 +14,10 @@
 
 SHELL=/bin/sh
 
-################ make dir #################
-$(TARGET_BIN_DIRS):
-	$(MKDIR) $@
+################ mk golang bin #################
+$(TARGET_GOBIN): $(GO_MAIN_FILE) 
+	 $(GOBUILD) -o $@ $<
 
-$(TARGET_BIN_DIRS_CLEAN):
+$(TARGET_GOBIN_CLEAN): 
 	$(RM) $(subst _clean,,$@) 
 
-################ mk lib #################
-$(TARGET_BIN): $(TARGET_BIN_DIRS) $(LIB_C_OBJS) $(LIB_CXX_OBJS) $(LIB_CC_OBJS) $(RC_OBJS)
-	$(CXX) -o $@ $(filter %.o,$^) $(LDFLAGS)
-
-$(TARGET_BIN_CLEAN): $(TARGET_BIN_DIRS_CLEAN) $(TARGET_BIN_HEADERS_CLEAN) $(LIB_C_OBJS_CLEAN) $(LIB_CXX_OBJS_CLEAN) $(LIB_CC_OBJS_CLEAN) $(RC_OBJS_CLEAN)
-	$(RM) $(subst _clean,,$@) 
-
-include $(MK_COMMON)
- 
