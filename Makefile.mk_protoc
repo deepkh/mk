@@ -32,3 +32,27 @@ cc/%.pb.cc: %.proto
 ################ clean .pb.go #################
 %.pb.go_clean:
 	$(RM) $(subst .pb.go_clean,.pb.go,$@)
+
+
+
+
+
+################ grpc gen cpp #################
+cc/%.grpc.pb.cc: %.proto
+	@echo ===222cpp_out $(subst /cc,,$<)
+	$(MKDIR) cc > /dev/null 2> /dev/null
+	protoc -I=. --grpc_out=cc --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` $(subst /cc,,$<)
+
+################ grpc gen go #################
+%_grpc.pb.go: %.proto
+	@echo ===222go_out
+	protoc -I=. --go_out=. --go-grpc_out=. $<
+
+################ clean .grpc.pb.cc, .grpc.pb.h #################
+%.grpc.pb.cc_clean:
+	$(RM) $(subst .grpc.pb.cc_clean,.pb.cc,$@) $(subst .grpc.pb.cc_clean,.pb.h,$@)
+
+################ clean .grpc.pb.go, .pb.go #################
+%_grpc.pb.go_clean:
+	$(RM) $(subst _grpc.pb.go_clean,_grpc.pb.go,$@) $(subst _grpc.pb.go_clean,.pb.go,$@)
+
