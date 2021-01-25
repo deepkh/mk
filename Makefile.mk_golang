@@ -16,7 +16,7 @@ SHELL=/bin/sh
 
 ################ mk golang bin #################
 $(TARGET_GOBIN): $(GO_MAIN_FILE) 
-	 $(GOBUILD) -o $@ $<
+	 $(GOBUILD) -o $@ $^
 
 $(TARGET_GOBIN_CLEAN): 
 	$(RM) $(subst _clean,,$@) 
