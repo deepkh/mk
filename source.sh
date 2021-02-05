@@ -118,6 +118,8 @@ if [ -z $ROOT ]; then
 	export RUNTIME_OBJS=${RUNTIME}/objs
 	export RUNTIME_INCLUDE=${RUNTIME}/include
 
+	alias toc_gen="cat README.md | gh-md-toc -"
+
 	# load global source.${PLATFORM}.sh
 	source "${MK}/platform/source.${PLATFORM}.sh"
 

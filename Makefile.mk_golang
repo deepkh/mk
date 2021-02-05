@@ -21,3 +21,10 @@ $(TARGET_GOBIN): $(GO_MAIN_FILE)
 $(TARGET_GOBIN_CLEAN): 
 	$(RM) $(subst _clean,,$@) 
 
+################ mk golang bin #################
+$(TARGET_GOBINTEST): $(GO_MAINTEST_FILE) 
+	 $(GOTESTBUILD) -o $@ $^
+
+$(TARGET_GOBINTEST_CLEAN): 
+	$(RM) $(subst _clean,,$@) 
+
