@@ -97,7 +97,19 @@ TARGET_SCRIPT_CMD=
 
 # GCC compiling variables
 CFLAGS = -I. -I$(RUNTIME)/include -O2 -Wall -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS 
-CXXFLAGS = -std=c++11
+CXXFLAGS =
+
+#
+# This value should be either of c++98, c++11, c++14, c++17...
+# The default value is C++11; I think there is no older version than this.
+# Please check the below link for more details.
+# https://gcc.gnu.org/projects/cxx-status.html
+#
+ifdef HAVE_DEF_STDCPPVER
+	CXXFLAGS += -std=${HAVE_DEF_STDCPPVER}
+else
+	CXXFLAGS += -std=c++11
+endif
 
 ifdef HAVE_DEF_DEBUG
 	CFLAGS += -g
