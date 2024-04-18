@@ -18,7 +18,7 @@ export PLATFORM_FILE=".platform"
 
 _get_platform_result=
 _get_platform() {
-	local platform_array=("mingw" "mingw.linux" "linux" "arm-linux-gnueabihf", "mac")
+	local platform_array=("mingw" "mingw.linux" "linux" "linux.aarch64" "arm-linux-gnueabihf", "mac")
 	echo "Select Platform"
 	select yn in ${platform_array[@]} ; do
 		case $yn in
@@ -74,6 +74,8 @@ if [ -z $ROOT ]; then
 		export TARGET="win64"
 	elif [ "${PLATFORM}" = "linux" ];then
 		export TARGET="linux64"
+	elif [ "${PLATFORM}" = "linux.aarch64" ];then
+		export TARGET="aarch64"
 	elif [ "${PLATFORM}" = "arm-linux-gnueabihf" ];then
 		export TARGET="armv7"
 	elif [ "${PLATFORM}" = "mac" ];then
