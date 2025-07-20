@@ -85,7 +85,7 @@ if [ -z $ROOT ]; then
 	echo "TARGET=${TARGET}"
 
 	# check CROSS_COMPILE_MODE
-	if [[ "${HOST}" = "Linux"  && "${TARGET}" != "linux64" ]];then
+	if [[ "${HOST}" = "Linux"  && "${TARGET}" = "win64" ]];then
 		export CROSS_COMPILE_MODE="1"
 	fi
 
